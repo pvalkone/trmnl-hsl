@@ -1,0 +1,32 @@
+{% comment %}
+Compact single-column stand-in for the half_horizontal/half_vertical/quadrant
+layouts.
+
+The board is designed for full-view (TRMNL X, 1872×1404); this just keeps the
+smaller layout keys populated with the next departures from the left column
+rather than rendering blank.
+{% endcomment %}
+<div class="layout">
+    <table class="table">
+        <tbody>
+        {% for stop in left.stops %}
+        <tr>
+            <td colspan="2"><span class="title title--small">{{ stop.name }}</span></td>
+        </tr>
+        {% for dep in stop.deps %}
+        <tr>
+            <td><span class="label label--small">{{ dep.line }} {{ dep.dest }}{% if dep.metro %} (M){% endif %}</span>
+            </td>
+            <td><span class="label label--small text-right">{% if dep.rt %}~{% endif %}{{ dep.hhmm }}</span></td>
+        </tr>
+        {% endfor %}
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="title_bar">
+    <img class="image" src="https://trmnl.com/images/plugins/trmnl--render.svg"/>
+    <span class="title">HSL — {{ title }}</span>
+    <span class="instance" style="position: absolute; right: 24px;">{{ clock }} {{ date }}</span>
+</div>

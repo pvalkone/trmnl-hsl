@@ -1,0 +1,9 @@
+{:paths ["src" "views" "test"]
+ :tasks
+ {serve {:doc "Start the TRMNL HSL departures board server"
+         :requires ([hsl.server :as server])
+         :task (server/-main)}
+  test  {:doc "Run the unit tests"
+         :requires ([clojure.test :as t] [hsl.board-test] [hsl.render-test])
+         :task (let [{:keys [fail error]} (t/run-tests 'hsl.board-test 'hsl.render-test)]
+                 (System/exit (if (pos? (+ fail error)) 1 0)))}}}

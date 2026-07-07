@@ -1,0 +1,33 @@
+#!/bin/sh
+#
+# FreeBSD rc.d service for the TRMNL HSL departures board server.
+#
+# PROVIDE: trmnl_hsl
+# REQUIRE: NETWORKING
+# KEYWORD: shutdown
+#
+. /etc/rc.subr
+
+name="trmnl_hsl"
+rcvar="trmnl_hsl_enable"
+
+: "${trmnl_hsl_user:=www}"
+: "${trmnl_hsl_appdir:=/opt/trmnl-hsl}"
+
+pidfile="/var/run/${name}.pid"
+logfile="/var/log/${name}.log"
+
+command="/usr/sbin/daemon"
+command_args="-f -r -P ${pidfile} -t ${name} -o ${logfile} ${trmnl_hsl_appdir}/run.sh"
+procname="/usr/sbin/daemon"
+
+start_precmd="trmnl_hsl_precmd"
+
+trmnl_hsl_precmd() {
+  # Pre-create PID/log owned by the run user (their dirs are root-only).
+  install -o "${trmnl_hsl_user}" -g "${trmnl_hsl_user}" -m 644 /dev/null "${pidfile}"
+  install -o "${trmnl_hsl_user}" -g "${trmnl_hsl_user}" -m 644 /dev/null "${logfile}"
+}
+
+load_rc_config $name
+run_rc_command "$1"
