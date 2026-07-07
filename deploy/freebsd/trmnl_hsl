@@ -13,12 +13,13 @@ rcvar="trmnl_hsl_enable"
 
 : "${trmnl_hsl_user:=www}"
 : "${trmnl_hsl_appdir:=/opt/trmnl-hsl}"
+: "${trmnl_hsl_env:=}"
 
 pidfile="/var/run/${name}.pid"
 logfile="/var/log/${name}.log"
 
 command="/usr/sbin/daemon"
-command_args="-f -r -P ${pidfile} -t ${name} -o ${logfile} ${trmnl_hsl_appdir}/run.sh"
+command_args="-f -r -P ${pidfile} -t ${name} -o ${logfile} /usr/bin/env ${trmnl_hsl_env} ${trmnl_hsl_appdir}/run.sh"
 procname="/usr/sbin/daemon"
 
 start_precmd="trmnl_hsl_precmd"
