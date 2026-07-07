@@ -2,7 +2,7 @@
   "Renders the board map into TRMNL layout markup with Selmer."
   (:require [selmer.parser :as selmer]))
 
-(def ^:private max-alerts 3)
+(def ^:private max-alerts 2)
 
 (defn overflow-label
   "Finnish overflow marker for `n` hidden alerts."
