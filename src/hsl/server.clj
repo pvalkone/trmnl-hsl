@@ -129,7 +129,11 @@
         ttl-ms (Long/parseLong (env dotenv "CACHE_TTL_MS" "60000"))
         state {:cache (atom {:board nil :fetched-at-ms 0})
                :api-key api-key
-               :ttl-ms ttl-ms}]
-    (http/run-server (handler state) {:port port})
+               :ttl-ms ttl-ms}
+        stop-server (http/run-server (handler state) {:port port})]
+    (.addShutdownHook (Runtime/getRuntime)
+                      (Thread. ^Runnable (fn []
+                                           (log "Server shutting down")
+                                           (stop-server))))
     (log (str "Server started on port " port " (TTL " ttl-ms "ms)"))
     @(promise)))
