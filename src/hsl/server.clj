@@ -8,10 +8,28 @@
             [hsl.config :as config]
             [hsl.digitransit :as digitransit]
             [hsl.render :as render]
-            [org.httpkit.server :as http]))
+            [org.httpkit.server :as http])
+  (:import (java.time ZonedDateTime)
+           (java.time.format DateTimeFormatter)))
 
 (defn- now-ms [] (System/currentTimeMillis))
 (defn- now-seconds [] (quot (now-ms) 1000))
+
+(def ^:private log-formatter (DateTimeFormatter/ofPattern "yyyy-MM-dd HH:mm:ss"))
+
+(defn- timestamp []
+  (.format (ZonedDateTime/now board/zone) log-formatter))
+
+(defn log
+  "Print a timestamped line to stdout."
+  [& args]
+  (println (str (timestamp) " " (str/join " " args))))
+
+(defn log-error
+  "Like `log`, but to stderr."
+  [& args]
+  (binding [*out* *err*]
+    (println (str (timestamp) " " (str/join " " args)))))
 
 (defn load-dotenv!
   "Load KEY=VALUE lines from an .env file into the process env view we use.
@@ -71,8 +89,7 @@
           (reset! cache {:board fresh :fetched-at-ms (now-ms)})
           fresh)
         (catch Exception e
-          (binding [*out* *err*]
-            (println "Board refetch failed:" (ex-message e)))
+          (log-error "Board refetch failed:" (ex-message e))
           (or board (throw e)))))))
 
 (defn- json-response [status body]
@@ -102,7 +119,7 @@
 
         (json-response 404 {:error "not found"}))
       (catch Exception e
-        (binding [*out* *err*] (println "Request error:" (ex-message e)))
+        (log-error "Request error:" (ex-message e))
         (json-response 500 {:error (ex-message e)})))))
 
 (defn -main [& _]
@@ -114,5 +131,5 @@
                :api-key api-key
                :ttl-ms ttl-ms}]
     (http/run-server (handler state) {:port port})
-    (println (str "TRMNL HSL departures board server started on port " port " (ttl " ttl-ms "ms)"))
+    (log (str "Server started on port " port " (TTL " ttl-ms "ms)"))
     @(promise)))
