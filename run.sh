@@ -10,4 +10,4 @@
 # keeps all shell quoting out of command_args.
 #
 cd "$(dirname "$0")" || exit 1
-exec "$(which bb)" serve
+exec "${BB_BIN:-/usr/local/bin/bb}" serve
