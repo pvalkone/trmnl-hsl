@@ -81,7 +81,7 @@
         :let [stop (get by-id sid)]
         :when stop
         :let [hidden (set (get (:hidden-routes col) sid []))
-              show (some-> (:show-routes col) (get sid) set)] ;; nil -> no allowlist
+              show (some-> (:show-routes col) (get sid) set)] ; nil -> no allowlist
         stp (:stoptimesForPatterns stop)
         st (:stoptimes stp)
         :when (= (get-in st [:stop :gtfsId]) sid)
