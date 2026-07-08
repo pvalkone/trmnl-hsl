@@ -1,13 +1,13 @@
 (ns hsl.config)
 
-;; Static board config, captured originally from the real Omat pysäkkinäytöt board's
-;; /api/staticmonitor/<uuid>.
-;;
-;; Route keys ("<routeGtfsId>:<shortName>:<patternHeadsign>:<directionId>") are
-;; matched against the pattern's bare headsign (not the stoptime's "via X" variant).
-;;
-;; :hidden-routes {stopId [...]} ;; Denylist: drop these route patterns at a given stop
-;; :show-routes   {stopId [...]} ;; Allowlist: at these stops, show only the listed patterns
+;;; Static board config, captured originally from the real Omat pysäkkinäytöt board's
+;;; /api/staticmonitor/<uuid>.
+;;;
+;;; Route keys ("<routeGtfsId>:<shortName>:<patternHeadsign>:<directionId>") are
+;;; matched against the pattern's bare headsign (not the stoptime's "via X" variant).
+;;;
+;;; :hidden-routes {stopId [...]} ; Denylist: drop these route patterns at a given stop
+;;; :show-routes   {stopId [...]} ; Allowlist: at these stops, show only the listed patterns
 
 (def board
   {:title "Kotisaarenkatu"

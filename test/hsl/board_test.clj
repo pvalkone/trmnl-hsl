@@ -3,7 +3,7 @@
             [hsl.board :as board]
             [hsl.config :as config]))
 
-(def service 1751760000) ;; some service-day midnight
+(def service 1751760000) ; some service-day midnight
 (defn- at [dep] (+ service dep))
 
 (defn- stoptime
@@ -31,9 +31,9 @@
               {:alerts [{:alertHeaderText "Bussi 55 poikkeusreitti"}]}] ; dup
      :stoptimesForPatterns
      [(pattern "HSL:1055" "55" "Keskusta" 0
-               [(stoptime "HSL:1230410" 60900)            ;; 17:15
-                (stoptime "HSL:1230410" 50700 {:rt true}) ;; 17:05, realtime
-                (stoptime "HSL:1230410" 51300)            ;; 17:15-ish
+               [(stoptime "HSL:1230410" 60900)            ; 17:15
+                (stoptime "HSL:1230410" 50700 {:rt true}) ; 17:05, realtime
+                (stoptime "HSL:1230410" 51300)            ; 17:15-ish
                 (stoptime "HSL:1230410" 55000)
                 (stoptime "HSL:1230410" 52000)
                 (stoptime "HSL:1230410" 53000)])]}
@@ -51,9 +51,9 @@
     {:gtfsId "HSL:1240118" :name "Kumpulan kampus" :vehicleMode "BUS"
      :stoptimesForPatterns
      [(pattern "HSL:4717" "717" "Rautatientori" 1
-               [(stoptime "HSL:1240118" 50000)])   ;; hidden
+               [(stoptime "HSL:1240118" 50000)])   ; hidden
       (pattern "HSL:9999" "999" "Somewhere" 0
-               [(stoptime "HSL:1240118" 50100)])]} ;; kept
+               [(stoptime "HSL:1240118" 50100)])]} ; kept
     {:gtfsId "HSL:1230112" :name "Kustaa Vaasan tie" :vehicleMode "BUS"
      :stoptimesForPatterns
      [(pattern "HSL:1070" "70" "Rautatientori" 1
@@ -62,17 +62,17 @@
     {:gtfsId "HSL:1230109" :name "Kumpulan kampus (M)" :vehicleMode "BUS"
      :stoptimesForPatterns
      [(pattern "HSL:1071" "71" "Malmi" 0
-               [(stoptime "HSL:1230109" 50300)]) ;; allowlisted
+               [(stoptime "HSL:1230109" 50300)]) ; allowlisted
       (pattern "HSL:1506" "506" "Myllypuro (M)" 1
-               [(stoptime "HSL:1230109" 50400 {:headsign "Myllypuro (M)"})]) ;; allowlisted, metro
+               [(stoptime "HSL:1230109" 50400 {:headsign "Myllypuro (M)"})]) ; allowlisted, metro
       (pattern "HSL:1099" "99" "NotAllowed" 0
-               [(stoptime "HSL:1230109" 50500)])]} ;; not allowlisted -> drop
+               [(stoptime "HSL:1230109" 50500)])]} ; not allowlisted -> drop
     {:gtfsId "HSL:1240103" :name "Pietari Kalmin katu" :vehicleMode "BUS"
      :stoptimesForPatterns
      [(pattern "HSL:1078" "78" "Latokartano" 0
-               [(stoptime "HSL:1240103" 50600)])]}]}) ;; allowlisted
+               [(stoptime "HSL:1240103" 50600)])]}]}) ; allowlisted
 
-(def now (at 50700)) ;; 17:05
+(def now (at 50700)) ; 17:05
 (def result (board/build-board data config/board now))
 
 (defn- stop-by-name [column nm]
