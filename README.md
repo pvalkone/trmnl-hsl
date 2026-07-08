@@ -89,10 +89,10 @@ Everything about what the board shows lives in
 each column lists a set of stops and splits its row budget evenly across them:
 
 ```clojure
-{:title "My board title"  ;; Shown in the bottom status bar
- :number-of-departures 20 ;; How many upcoming departures to fetch per stop
+{:title "My board title"  ; Shown in the bottom status bar
+ :number-of-departures 20 ; How many upcoming departures to fetch per stop
  :columns
- {:left {:rows 12 ;; Total departure rows for this column
+ {:left {:rows 12 ; Total departure rows for this column
          :stop-ids ["HSL:1230410" "HSL:1210405"]
          :hidden-routes {}}
   :right {:rows 9
