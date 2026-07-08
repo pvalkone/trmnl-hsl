@@ -52,14 +52,14 @@
   (for [sid (:stop-ids col)
         :let [stop (get by-id sid)]
         :when stop
-        :let [hidden (get (:hidden-routes col) sid [])
-              show (get (:show-routes col) sid)] ;; nil -> no allowlist
+        :let [hidden (set (get (:hidden-routes col) sid []))
+              show (some-> (:show-routes col) (get sid) set)] ;; nil -> no allowlist
         stp (:stoptimesForPatterns stop)
         st (:stoptimes stp)
         :when (= (get-in st [:stop :gtfsId]) sid)
         :let [rk (route-key (:pattern stp))]
-        :when (and (if (nil? show) true (some #(= % rk) show))
-                   (not (some #(= % rk) hidden)))
+        :when (and (or (nil? show) (contains? show rk))
+                   (not (contains? hidden rk)))
         :let [at (+ (:serviceDay st)
                     (if (:realtime st) (:realtimeDeparture st) (:scheduledDeparture st)))
               pattern-headsign (get-in stp [:pattern :headsign])]]
