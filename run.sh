@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Launcher for the TRMNL HSL departures board server.
+# Launcher for the TRMNL HSL departure board server.
 #
 # Starts Babashka from this script's own directory so bb finds bb.edn
 # AND the server finds its sibling .env. Both are resolved relative to

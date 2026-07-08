@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# FreeBSD rc.d service for the TRMNL HSL departures board server.
+# FreeBSD rc.d service for the TRMNL HSL departure board server.
 #
 # PROVIDE: trmnl_hsl
 # REQUIRE: NETWORKING

@@ -1,6 +1,6 @@
-# TRMNL HSL departures board plugin
+# TRMNL HSL departure board plugin
 
-<img src="trmnl-hsl-preview.png" alt="The HSL departures board rendered on a TRMNL full-view layout" width="936">
+<img src="trmnl-hsl-preview.png" alt="The HSL departure board rendered on a TRMNL full-view layout" width="936">
 
 A live public transport departure board for a [TRMNL](https://usetrmnl.com)
 e-ink display, showing the next departures from your chosen [HSL](https://www.hsl.fi/en)

@@ -1,6 +1,6 @@
 {:paths ["src" "views" "test"]
  :tasks
- {serve {:doc "Start the TRMNL HSL departures board server"
+ {serve {:doc "Start the TRMNL HSL departure board server"
          :requires ([hsl.server :as server])
          :task (server/-main)}
   test  {:doc "Run the unit tests"

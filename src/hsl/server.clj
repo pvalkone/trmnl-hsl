@@ -1,5 +1,5 @@
 (ns hsl.server
-  "Always-on HTTP server: fetches and transforms the HSL departures board
+  "Always-on HTTP server: fetches and transforms the HSL departure board
    behind a short-TTL cache and serves TRMNL-ready markup."
   (:require [cheshire.core :as json]
             [clojure.java.io :as io]
