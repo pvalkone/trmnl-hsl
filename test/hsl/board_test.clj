@@ -78,45 +78,45 @@
 (defn- stop-by-name [column nm]
   (first (filter #(= (:name %) nm) (:stops column))))
 
-(deftest per-stop-slicing
+(deftest per-stop-slicing-test
   (testing "3 left names => floor(12/3)=4 departures per stop, earliest first"
     (let [deps (:deps (stop-by-name (:left result) "Kotisaarenkatu"))]
       (is (= 4 (count deps)))
       (is (= (sort (map :at deps)) (map :at deps)))
       (is (= [(at 50700) (at 51300) (at 52000) (at 53000)] (map :at deps))))))
 
-(deftest realtime-flag
+(deftest realtime-flag-test
   (testing "realtime departure uses realtimeDeparture and sets rt + ~ hhmm"
     (let [dep (first (:deps (stop-by-name (:left result) "Kotisaarenkatu")))]
       (is (true? (:rt dep)))
       (is (= "17:05" (:hhmm dep))))))
 
-(deftest denylist-hides-route
+(deftest denylist-hides-route-test
   (testing "hidden route-key at HSL:1240118 is dropped, others kept"
     (let [deps (:deps (stop-by-name (:right result) "Kumpulan kampus"))
           lines (set (map :line deps))]
       (is (contains? lines "999"))
       (is (not (contains? lines "717"))))))
 
-(deftest allowlist-shows-only-listed
+(deftest allowlist-shows-only-listed-test
   (testing "HSL:1230109 shows only allowlisted route-keys"
     (let [deps (:deps (stop-by-name (:right result) "Kumpulan kampus (M)"))
           lines (set (map :line deps))]
       (is (= #{"71" "506"} lines))
       (is (not (contains? lines "99"))))))
 
-(deftest metro-and-dest-stripping
+(deftest metro-and-dest-stripping-test
   (testing "(M) suffix strips from dest and sets metro"
     (let [dep (first (filter #(= "506" (:line %))
                              (:deps (stop-by-name (:right result) "Kumpulan kampus (M)"))))]
       (is (= "Myllypuro" (:dest dep)))
       (is (true? (:metro dep))))))
 
-(deftest alerts-deduped
+(deftest alerts-deduped-test
   (testing "stop + route alerts are collected and order-preservingly deduped"
     (is (= ["Bussi 55 poikkeusreitti" "Linja 55 myöhässä"] (:alerts result)))))
 
-(deftest board-envelope
+(deftest board-envelope-test
   (testing "top-level fields present and correct"
     (is (= "Kotisaarenkatu" (:title result)))
     (is (= now (:generated result)))
