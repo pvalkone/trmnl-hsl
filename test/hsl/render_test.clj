@@ -1,17 +1,15 @@
 (ns hsl.render-test
-  (:require [clojure.test :refer [deftest testing is]]
+  (:require [clojure.test :refer [deftest testing is are]]
             [clojure.string :as str]
             [hsl.render :as render]))
 
 (deftest overflow-label-plural-test
-  (testing "no overflow => nil (marker hidden)"
-    (is (nil? (render/overflow-label 0)))
-    (is (nil? (render/overflow-label -1))))
-  (testing "exactly one extra => singular"
-    (is (= "+1 muu häiriötiedote" (render/overflow-label 1))))
-  (testing "two or more => partitive plural"
-    (is (= "+2 muuta häiriötiedotetta" (render/overflow-label 2)))
-    (is (= "+5 muuta häiriötiedotetta" (render/overflow-label 5)))))
+  (are [n expected] (= expected (render/overflow-label n))
+    0  nil                            ; no overflow => marker hidden
+    -1 nil
+    1  "+1 muu häiriötiedote"         ; exactly one extra => singular
+    2  "+2 muuta häiriötiedotetta"    ; two or more => partitive plural
+    5  "+5 muuta häiriötiedotetta"))
 
 (defn- board-with [alerts]
   {:title "T" :clock "21:35" :date "6.7."
