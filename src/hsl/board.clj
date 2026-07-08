@@ -45,6 +45,34 @@
                       (mapcat #(keep :alertHeaderText (:alerts %)) (:routes stop)))]
      text)))
 
+(defn- visible?
+  "True when route-key `rk` passes a stop's allow/deny lists. `show` is nil (no
+   allowlist) or a set of permitted keys; `hidden` is a set of denied keys."
+  [show hidden rk]
+  (and (or (nil? show) (contains? show rk))
+       (not (contains? hidden rk))))
+
+(defn- departure-at
+  "Absolute epoch second of stoptime `st`: realtime when live, else scheduled."
+  [st]
+  (+ (:serviceDay st)
+     (if (:realtime st) (:realtimeDeparture st) (:scheduledDeparture st))))
+
+(defn- ->departure
+  "Board departure entry for stoptime `st` of pattern `stp` departing `stop`."
+  [stop stp st]
+  (let [headsign (get-in stp [:pattern :headsign])
+        at (departure-at st)]
+    {:name (:name stop)
+     :line (get-in stp [:pattern :route :shortName])
+     :dest (-> headsign (str/replace #"\s*\(M\)\s*$" "") str/trim)
+     :metro (or (str/includes? (str (:headsign st)) "(M)")
+                (str/includes? (str headsign) "(M)"))
+     :at at
+     :hhmm (hhmm at)
+     :rt (boolean (:realtime st))
+     :mode (:vehicleMode stop)}))
+
 (defn- departures
   "All departures for `col`, before per-stop grouping/slicing. Each carries its
    originating stop `:name` so build-column can group by it."
@@ -57,21 +85,8 @@
         stp (:stoptimesForPatterns stop)
         st (:stoptimes stp)
         :when (= (get-in st [:stop :gtfsId]) sid)
-        :let [rk (route-key (:pattern stp))]
-        :when (and (or (nil? show) (contains? show rk))
-                   (not (contains? hidden rk)))
-        :let [at (+ (:serviceDay st)
-                    (if (:realtime st) (:realtimeDeparture st) (:scheduledDeparture st)))
-              pattern-headsign (get-in stp [:pattern :headsign])]]
-    {:name (:name stop)
-     :line (get-in stp [:pattern :route :shortName])
-     :dest (-> pattern-headsign (str/replace #"\s*\(M\)\s*$" "") str/trim)
-     :metro (or (str/includes? (str (:headsign st)) "(M)")
-                (str/includes? (str pattern-headsign) "(M)"))
-     :at at
-     :hhmm (hhmm at)
-     :rt (boolean (:realtime st))
-     :mode (:vehicleMode stop)}))
+        :when (visible? show hidden (route-key (:pattern stp)))]
+    (->departure stop stp st)))
 
 (defn build-column
   "One column: departures grouped by stop name, each stop's list sorted by time
