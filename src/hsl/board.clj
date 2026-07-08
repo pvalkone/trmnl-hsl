@@ -75,7 +75,7 @@
 
 (defn build-column
   "One column: departures grouped by stop name, each stop's list sorted by time
-      and evenly capped so the column fits `:rows`."
+   and evenly capped so the column fits `:rows`."
   [by-id col]
   (let [deps (departures by-id col)
         names (dedup (for [sid (:stop-ids col)
