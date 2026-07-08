@@ -20,13 +20,13 @@
 (defn- timestamp []
   (.format (ZonedDateTime/now board/zone) log-formatter))
 
-(defn log
+(defn log!
   "Print a timestamped line to stdout."
   [& args]
   (println (str (timestamp) " " (str/join " " args))))
 
-(defn log-error
-  "Like `log`, but to stderr."
+(defn log-error!
+  "Like `log!`, but to stderr."
   [& args]
   (binding [*out* *err*]
     (println (str (timestamp) " " (str/join " " args)))))
@@ -89,7 +89,7 @@
           (reset! cache {:board fresh :fetched-at-ms (now-ms)})
           fresh)
         (catch Exception e
-          (log-error "Board refetch failed:" (ex-message e))
+          (log-error! "Board refetch failed:" (ex-message e))
           (or board (throw e)))))))
 
 (defn- json-response [status body]
@@ -119,7 +119,7 @@
 
         (json-response 404 {:error "not found"}))
       (catch Exception e
-        (log-error "Request error:" (ex-message e))
+        (log-error! "Request error:" (ex-message e))
         (json-response 500 {:error (ex-message e)})))))
 
 (defn -main [& _]
@@ -133,7 +133,7 @@
         stop-server (http/run-server (handler state) {:port port})]
     (.addShutdownHook (Runtime/getRuntime)
                       (Thread. ^Runnable (fn []
-                                           (log "Server shutting down")
+                                           (log! "Server shutting down")
                                            (stop-server))))
-    (log (str "Server started on port " port " (TTL " ttl-ms "ms)"))
+    (log! (str "Server started on port " port " (TTL " ttl-ms "ms)"))
     @(promise)))
