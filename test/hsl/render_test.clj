@@ -3,7 +3,7 @@
             [clojure.string :as str]
             [hsl.render :as render]))
 
-(deftest overflow-label-plural
+(deftest overflow-label-plural-test
   (testing "no overflow => nil (marker hidden)"
     (is (nil? (render/overflow-label 0)))
     (is (nil? (render/overflow-label -1))))
@@ -17,7 +17,7 @@
   {:title "T" :clock "21:35" :date "6.7."
    :left {:stops []} :right {:stops []} :alerts alerts})
 
-(deftest render-caps-and-labels-alerts
+(deftest render-caps-and-labels-alerts-test
   (testing "<=2 alerts: all shown, no overflow marker"
     (let [html (render/render-full (board-with ["a" "b"]))]
       (is (str/includes? html "Häiriötiedotteet"))
