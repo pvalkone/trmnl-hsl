@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>HSL — Testikatu</title>
+    <link rel="stylesheet" href="https://trmnl.com/css/3.1.2/plugins.css">
+    <style>
+        /*
+         * Development-only chrome: centre the e-ink screen on a neutral
+         * backdrop so /preview reads as the device, not a bare fragment.
+         * `safe` centring + scroll keeps the fixed-size screen reachable
+         * in a browser window narrower than it, instead of clipping its
+         * edges.
+         */
+        html, body {
+            margin: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            display: grid;
+            align-items: safe center;
+            justify-items: safe center;
+            padding: 32px;
+            box-sizing: border-box;
+            overflow: auto;
+            background: #e7e5e1;
+        }
+
+        .screen {
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.18);
+        }
+
+        /*
+         * Clamp destinations to one line like the device's `data-clamp`,
+         * but in CSS: the framework's JS clamp measures before the large
+         * stylesheet and webfonts load and mis-truncates text that fits.
+         *
+         * The screen is a fixed width, so a full-width table is bounded to its
+         * column; hiding overflow then reproduces the device's column-width
+         * clamp (text shows in full until the row would overflow) with no
+         * arbitrary width.
+         */
+        .view--full .table {
+            width: 100%;
+        }
+
+        .view--full td .label[data-clamp] {
+            display: block;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+    </style>
+</head>
+<body class="environment trmnl">
+    <div class="screen screen--v2">
+        <div class="view view--full">
+            <div class="layout" style="padding: 8px 24px 24px 24px;">
+    <div class="columns">
+
+        <div class="column" style="margin-right: 20px;">
+            <table class="table">
+                <tbody>
+                
+                <tr>
+                    <td colspan="3"><span class="title">Kotisaarenkatu</span></td>
+                </tr>
+                <tr>
+                    <td><span class="title title--small">Linja</span></td>
+                    <td><span class="title title--small">Määränpää</span></td>
+                    <td><span class="title title--small text-right">Lähtöaika</span></td>
+                </tr>
+                
+                <tr>
+                    <td><span class="label">55</span></td>
+                    <td><span class="label" data-clamp="1">Rautatientori</span></td>
+                    <td><span class="label text-right">~17:05</span></td>
+                </tr>
+                
+                <tr>
+                    <td><span class="label">55</span></td>
+                    <td><span class="label" data-clamp="1">Rautatientori</span></td>
+                    <td><span class="label text-right">17:15</span></td>
+                </tr>
+                
+                <tr>
+                    <td><span class="label">506</span></td>
+                    <td><span class="label" data-clamp="1">Myllypuro (M)</span></td>
+                    <td><span class="label text-right">17:20</span></td>
+                </tr>
+                
+                
+                <tr>
+                    <td colspan="3"><span class="title">Intiankatu</span></td>
+                </tr>
+                <tr>
+                    <td><span class="title title--small">Linja</span></td>
+                    <td><span class="title title--small">Määränpää</span></td>
+                    <td><span class="title title--small text-right">Lähtöaika</span></td>
+                </tr>
+                
+                <tr>
+                    <td><span class="label">57</span></td>
+                    <td><span class="label" data-clamp="1">Munkkivuori</span></td>
+                    <td><span class="label text-right">17:08</span></td>
+                </tr>
+                
+                
+                </tbody>
+            </table>
+        </div>
+
+        <div class="column" style="margin-left: 20px;">
+            <table class="table">
+                <tbody>
+                
+                <tr>
+                    <td colspan="3"><span class="title">Kumpulan kampus</span></td>
+                </tr>
+                <tr>
+                    <td><span class="title title--small">Linja</span></td>
+                    <td><span class="title title--small">Määränpää</span></td>
+                    <td><span class="title title--small text-right">Lähtöaika</span></td>
+                </tr>
+                
+                <tr>
+                    <td><span class="label">71</span></td>
+                    <td><span class="label" data-clamp="1">Malmi</span></td>
+                    <td><span class="label text-right">~17:06</span></td>
+                </tr>
+                
+                <tr>
+                    <td><span class="label">78</span></td>
+                    <td><span class="label" data-clamp="1">Rautatientori via Kalasatama ja Sörnäinen</span></td>
+                    <td><span class="label text-right">17:12</span></td>
+                </tr>
+                
+                
+                
+                <tr>
+                    <td colspan="3"><span class="title">Häiriötiedotteet</span></td>
+                </tr>
+                <tr>
+                    <td colspan="3" style="padding-top: 12px;">
+                        
+                        <div class="label label--small" style="display: block; margin-bottom: 8px;">Bussi 55 poikkeusreitti</div>
+                        
+                        <div class="label label--small" style="display: block; margin-bottom: 8px;">Linja 506 myöhässä</div>
+                        
+                        
+                        <div class="label label--small" style="display: block;">+1 muu häiriötiedote</div>
+                        
+                    </td>
+                </tr>
+                
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+<div class="title_bar">
+    <img class="image" src="https://trmnl.com/images/plugins/trmnl--render.svg"/>
+    <span class="title">HSL — Testikatu</span>
+    <span class="instance" style="position: absolute; right: 24px;">17:05 6.7.</span>
+</div>
+
+        </div>
+    </div>
+</body>
+</html>

@@ -74,6 +74,16 @@ logic ([`render.clj`](src/hsl/render.clj)) are covered by unit tests in `test/hs
 
 Run the tests with `bb test`.
 
+The rendered markup is also guarded by golden-file snapshot tests
+([`snapshot_test.clj`](test/hsl/snapshot_test.clj)): a fixed fixture board is
+rendered through each template and compared against the committed snapshots in
+[`test/hsl/snapshots/`](test/hsl/snapshots). After an intentional change,
+regenerate and review the diff:
+
+```sh
+UPDATE_SNAPSHOTS=1 bb test
+```
+
 The code can be linted with [clj-kondo](https://github.com/clj-kondo/clj-kondo)
 and checked for formatting with [cljfmt](https://github.com/weavejester/cljfmt):
 
