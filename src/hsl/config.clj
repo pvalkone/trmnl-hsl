@@ -60,12 +60,12 @@
                  "HSL:1270104"] ; H3069 Viikintie
       :stop-names {"HSL:1270105" "Tekniikan museo (Hämeentie)"
                    "HSL:1270104" "Tekniikan museo (Viikintie)"}
-      :hidden-routes {}}
+      :hidden-routes {"HSL:1270104" ["HSL:1071:71:Malmi:0"]}}
      :right
      {:rows 9
       :stop-ids ["HSL:1270107"] ; H3070 Koskelantie
       :stop-names {"HSL:1270107" "Tekniikan museo (Koskelantie)"}
-      :hidden-routes {}}}}})
+      :hidden-routes {"HSL:1270107" ["HSL:1055:55:Koskela:0"]}}}}})
 
 (defn stop-ids
   "All stop IDs across both columns, in board order."
