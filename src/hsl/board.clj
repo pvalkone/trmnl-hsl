@@ -73,20 +73,28 @@
      :rt (boolean (:realtime st))
      :mode (:vehicleMode stop)}))
 
+(defn stop-name
+  "Display name for `sid`: the config `:stop-names` override, else the stop's
+   Digitransit name. Overrides let same-named stops (e.g. three \"Tekniikan
+   museo\" stops on different streets) group and label distinctly."
+  [col by-id sid]
+  (get (:stop-names col) sid (:name (get by-id sid))))
+
 (defn- departures
   "All departures for `col`, before per-stop grouping/slicing. Each carries its
-   originating stop `:name` so build-column can group by it."
+   originating stop's display `:name` so build-column can group by it."
   [by-id col]
   (for [sid (:stop-ids col)
         :let [stop (get by-id sid)]
         :when stop
         :let [hidden (set (get (:hidden-routes col) sid []))
-              show (some-> (:show-routes col) (get sid) set)] ; nil -> no allowlist
+              show (some-> (:show-routes col) (get sid) set) ; nil -> no allowlist
+              nm (stop-name col by-id sid)]
         stp (:stoptimesForPatterns stop)
         st (:stoptimes stp)
         :when (= (get-in st [:stop :gtfsId]) sid)
         :when (visible? show hidden (route-key (:pattern stp)))]
-    (->departure stop stp st)))
+    (assoc (->departure stop stp st) :name nm)))
 
 (defn build-column
   "One column: departures grouped by stop name, each stop's list sorted by time
@@ -94,9 +102,8 @@
   [by-id col]
   (let [deps (departures by-id col)
         names (dedup (for [sid (:stop-ids col)
-                           :let [stop (get by-id sid)]
-                           :when stop]
-                       (:name stop)))
+                           :when (get by-id sid)]
+                       (stop-name col by-id sid)))
         per-stop (max 1 (long (Math/floor (/ (:rows col) (double (max 1 (count names)))))))]
     {:stops (vec (for [nm names]
                    {:name nm

@@ -67,57 +67,84 @@
     :else api-key))
 
 (defn fetch-board!
-  "Fetch fresh data from Digitransit and build the board map."
-  [api-key]
+  "Fetch fresh data from Digitransit and build the board map for `config`."
+  [api-key config]
   (let [data (digitransit/fetch! {:api-key api-key
-                                  :ids (config/stop-ids config/board)
-                                  :number-of-departures (:number-of-departures config/board)})]
-    (board/build-board data config/board (now-seconds))))
+                                  :ids (config/stop-ids config)
+                                  :number-of-departures (:number-of-departures config)})]
+    (board/build-board data config (now-seconds))))
 
 (defn board-cached!
-  "Return a board map, refetching when the cache is older than `ttl-ms`.
+  "Return a board map for a single board, refetching when its cache is older
+   than `ttl-ms`.
 
    On a refetch failure, serve the last-good board (logging the error);
    only propagate if we have never had a good board."
-  [{:keys [cache api-key ttl-ms]}]
+  [{:keys [cache config api-key ttl-ms]}]
   (let [{:keys [board fetched-at-ms]} @cache
         stale? (or (nil? board) (> (- (now-ms) fetched-at-ms) ttl-ms))]
     (if-not stale?
       board
       (try
-        (let [fresh (fetch-board! api-key)]
+        (let [fresh (fetch-board! api-key config)]
           (reset! cache {:board fresh :fetched-at-ms (now-ms)})
           fresh)
         (catch Exception e
           (log-error! "Board refetch failed:" (ex-message e))
           (or board (throw e)))))))
 
+(defn board-handle
+  "The per-board cache/config handle for `slug`, merged with the shared
+   api-key and TTL so it can be passed straight to `board-cached!`. nil for an
+   unknown slug."
+  [state slug]
+  (when-let [handle (get (:boards state) slug)]
+    (assoc handle :api-key (:api-key state) :ttl-ms (:ttl-ms state))))
+
+(defn- board-health [{:keys [cache config]}]
+  (let [{:keys [board fetched-at-ms]} @cache]
+    {:title (:title config)
+     :stops (config/stop-ids config)
+     :cached_at fetched-at-ms
+     :has_board (some? board)}))
+
 (defn- json-response [status body]
   {:status status
    :headers {"Content-Type" "application/json; charset=utf-8"}
    :body (json/generate-string body)})
 
+(defn- path-segments
+  "URI split into non-empty path segments, e.g. \"/api/trmnl/foo\" -> [\"api\" \"trmnl\" \"foo\"]."
+  [uri]
+  (into [] (remove str/blank?) (str/split uri #"/")))
+
 (defn handler [state]
   (fn [{:keys [uri]}]
     (try
-      (case uri
-        "/api/trmnl"
-        (json-response 200 (render/render-all (board-cached! state)))
+      (let [segments (path-segments uri)]
+        (cond
+          ;; /api/trmnl/<slug>
+          (and (= 3 (count segments)) (= ["api" "trmnl"] (subvec segments 0 2)))
+          (if-let [handle (board-handle state (segments 2))]
+            (json-response 200 (render/render-all (board-cached! handle)))
+            (json-response 404 {:error "unknown board"}))
 
-        "/preview"
-        {:status 200
-         :headers {"Content-Type" "text/html; charset=utf-8"}
-         :body (render/render-full (board-cached! state))}
+          ;; /preview/<slug>
+          (and (= 2 (count segments)) (= "preview" (first segments)))
+          (if-let [handle (board-handle state (second segments))]
+            {:status 200
+             :headers {"Content-Type" "text/html; charset=utf-8"}
+             :body (render/render-full (board-cached! handle))}
+            (json-response 404 {:error "unknown board"}))
 
-        "/health"
-        (let [{:keys [board fetched-at-ms]} @(:cache state)]
+          ;; /health
+          (= ["health"] segments)
           (json-response 200 {:status "ok"
-                              :title (:title config/board)
-                              :stops (config/stop-ids config/board)
-                              :cached_at fetched-at-ms
-                              :has_board (some? board)}))
+                              :boards (into {} (for [[slug handle] (:boards state)]
+                                                 [slug (board-health handle)]))})
 
-        (json-response 404 {:error "not found"}))
+          :else
+          (json-response 404 {:error "not found"})))
       (catch Exception e
         (log-error! "Request error:" (ex-message e))
         (json-response 500 {:error (ex-message e)})))))
@@ -127,7 +154,9 @@
         api-key (validate-api-key (env dotenv "DIGITRANSIT_KEY" nil))
         port (Long/parseLong (env dotenv "PORT" "4001"))
         ttl-ms (Long/parseLong (env dotenv "CACHE_TTL_MS" "60000"))
-        state {:cache (atom {:board nil :fetched-at-ms 0})
+        state {:boards (into {} (for [[slug cfg] config/boards]
+                                  [slug {:cache (atom {:board nil :fetched-at-ms 0})
+                                         :config cfg}]))
                :api-key api-key
                :ttl-ms ttl-ms}
         stop-server (http/run-server (handler state) {:port port})]
@@ -135,5 +164,6 @@
                       (Thread. ^Runnable (fn []
                                            (log! "Server shutting down")
                                            (stop-server))))
-    (log! (str "Server started on port " port " (TTL " ttl-ms "ms)"))
+    (log! (str "Server started on port " port " (TTL " ttl-ms "ms). Boards: "
+               (str/join ", " (keys config/boards))))
     @(promise)))
