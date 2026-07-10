@@ -73,7 +73,7 @@
                [(stoptime "HSL:1240103" 50600)])]}]}) ; allowlisted
 
 (def now (at 50700)) ; 17:05
-(def result (board/build-board data config/board now))
+(def result (board/build-board data (config/boards "kotisaarenkatu") now))
 
 (defn- stop-by-name [column nm]
   (first (filter #(= (:name %) nm) (:stops column))))
@@ -115,6 +115,25 @@
 (deftest alerts-deduped-test
   (testing "stop + route alerts are collected and order-preservingly deduped"
     (is (= ["Bussi 55 poikkeusreitti" "Linja 55 myöhässä"] (:alerts result)))))
+
+(deftest stop-names-override-test
+  (testing "same-named stops group separately under their :stop-names labels"
+    (let [col {:rows 4
+               :stop-ids ["HSL:A" "HSL:B"]
+               :stop-names {"HSL:A" "Tekniikan museo (Hämeentie)"
+                            "HSL:B" "Tekniikan museo (Viikintie)"}}
+          by-id {"HSL:A" {:gtfsId "HSL:A" :name "Tekniikan museo" :vehicleMode "BUS"
+                          :stoptimesForPatterns
+                          [(pattern "HSL:1" "1" "North" 0 [(stoptime "HSL:A" 100)])]}
+                 "HSL:B" {:gtfsId "HSL:B" :name "Tekniikan museo" :vehicleMode "BUS"
+                          :stoptimesForPatterns
+                          [(pattern "HSL:2" "2" "South" 0 [(stoptime "HSL:B" 200)])]}}
+          {:keys [stops]} (board/build-column by-id col)]
+      (is (= ["Tekniikan museo (Hämeentie)" "Tekniikan museo (Viikintie)"] (map :name stops)))
+      (is (= ["1"] (map :line (:deps (stop-by-name {:stops stops}
+                                                   "Tekniikan museo (Hämeentie)")))))
+      (is (= ["2"] (map :line (:deps (stop-by-name {:stops stops}
+                                                   "Tekniikan museo (Viikintie)"))))))))
 
 (deftest board-envelope-test
   (testing "top-level fields present and correct"
