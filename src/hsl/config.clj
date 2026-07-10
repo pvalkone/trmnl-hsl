@@ -45,7 +45,27 @@
         "HSL:1078N:78N:Rautatientori:1"]}
       :show-routes
       {"HSL:1230109" ["HSL:1071:71:Malmi:0" "HSL:1506:506:Myllypuro (M):1"]
-       "HSL:1240103" ["HSL:1078:78:Latokartano:0"]}}}}})
+       "HSL:1240103" ["HSL:1078:78:Latokartano:0"]}}}}
+
+   "vanhankaupungintie"
+   {:title "Vanhankaupungintie"
+    :number-of-departures 20
+    :columns
+    ;; All three stops are named "Tekniikan museo" in Digitransit; the
+    ;; :stop-names overrides disambiguate them by street so they group and
+    ;; label distinctly.
+    {:left
+     {:rows 12
+      :stop-ids ["HSL:1270105"  ; H3048 Hämeentie
+                 "HSL:1270104"] ; H3069 Viikintie
+      :stop-names {"HSL:1270105" "Tekniikan museo (Hämeentie)"
+                   "HSL:1270104" "Tekniikan museo (Viikintie)"}
+      :hidden-routes {}}
+     :right
+     {:rows 9
+      :stop-ids ["HSL:1270107"] ; H3070 Koskelantie
+      :stop-names {"HSL:1270107" "Tekniikan museo (Koskelantie)"}
+      :hidden-routes {}}}}})
 
 (defn stop-ids
   "All stop IDs across both columns, in board order."
