@@ -144,6 +144,12 @@ smaller half/quadrant layouts). They're [Selmer](https://github.com/yogthos/Selm
 templates and use TRMNL's [design framework](https://trmnl.com/framework) classes
 (`.layout`, `.columns`, `.table`, `.title`, `.label` and `.title_bar`).
 
+On the device TRMNL wraps this markup in its `screen`/`view` shell and supplies
+the framework CSS. [`views/preview.html`](views/preview.html) recreates that shell
+for the browser: it embeds `full.html`, loads the framework stylesheet and picks
+the high-density `screen--v2` profile, so [`/preview/<slug>`](#quick-start-local)
+renders the way the plugin looks on the device instead of as bare, unstyled markup.
+
 ## TRMNL plugin setup
 
 1. In the [TRMNL dashboard](https://trmnl.com/dashboard), add a Private Plugin with the Polling strategy.

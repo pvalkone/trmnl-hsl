@@ -134,7 +134,7 @@
           (if-let [handle (board-handle state (second segments))]
             {:status 200
              :headers {"Content-Type" "text/html; charset=utf-8"}
-             :body (render/render-full (board-cached! handle))}
+             :body (render/render-preview (board-cached! handle))}
             (json-response 404 {:error "unknown board"}))
 
           ;; /health

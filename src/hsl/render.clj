@@ -24,10 +24,21 @@
            :alerts (not-empty (vec (take max-alerts alerts)))
            :alerts_overflow (overflow-label extra))))
 
-(defn render-full [board]
+(defn render-full
+  "Markup for the device's full layout."
+  [board]
   (selmer/render-file "full.html" (context board)))
 
-(defn render-compact [board]
+(defn render-preview
+  "A standalone HTML page wrapping the full board in the TRMNL design framework
+   (its CSS and a `screen`/`view` shell), so /preview renders in a browser the
+   way the plugin renders on the device."
+  [board]
+  (selmer/render-file "preview.html" (context board)))
+
+(defn render-compact
+  "Single-column markup reused for the half and quadrant layouts."
+  [board]
   (selmer/render-file "compact.html" (context board)))
 
 (defn render-all

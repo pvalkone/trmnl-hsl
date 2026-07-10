@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>HSL — {{ title }}</title>
+    <link rel="stylesheet" href="https://trmnl.com/css/3.1.2/plugins.css">
+    <style>
+        /*
+         * Development-only chrome: centre the e-ink screen on a neutral
+         * backdrop so /preview reads as the device, not a bare fragment.
+         * `safe` centring + scroll keeps the fixed-size screen reachable
+         * in a browser window narrower than it, instead of clipping its
+         * edges.
+         */
+        html, body {
+            margin: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            display: grid;
+            align-items: safe center;
+            justify-items: safe center;
+            padding: 32px;
+            box-sizing: border-box;
+            overflow: auto;
+            background: #e7e5e1;
+        }
+
+        .screen {
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.18);
+        }
+
+        /*
+         * Clamp destinations to one line like the device's `data-clamp`,
+         * but in CSS: the framework's JS clamp measures before the large
+         * stylesheet and webfonts load and mis-truncates text that fits.
+         *
+         * The screen is a fixed width, so a full-width table is bounded to its
+         * column; hiding overflow then reproduces the device's column-width
+         * clamp (text shows in full until the row would overflow) with no
+         * arbitrary width.
+         */
+        .view--full .table {
+            width: 100%;
+        }
+
+        .view--full td .label[data-clamp] {
+            display: block;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+    </style>
+</head>
+<body class="environment trmnl">
+    <div class="screen screen--v2">
+        <div class="view view--full">
+            {% include "full.html" %}
+        </div>
+    </div>
+</body>
+</html>
