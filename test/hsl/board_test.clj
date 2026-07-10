@@ -27,8 +27,8 @@
   {:stops
    [{:gtfsId "HSL:1230410" :name "Kotisaarenkatu" :vehicleMode "BUS"
      :alerts [{:alertHeaderText "Bussi 55 poikkeusreitti"}]
-     :routes [{:alerts [{:alertHeaderText "Linja 55 myöhässä"}]}
-              {:alerts [{:alertHeaderText "Bussi 55 poikkeusreitti"}]}] ; dup
+     :routes [{:gtfsId "HSL:1055" :alerts [{:alertHeaderText "Linja 55 myöhässä"}]}
+              {:gtfsId "HSL:1055" :alerts [{:alertHeaderText "Bussi 55 poikkeusreitti"}]}] ; dup
      :stoptimesForPatterns
      [(pattern "HSL:1055" "55" "Keskusta" 0
                [(stoptime "HSL:1230410" 60900)            ; 17:15
@@ -49,6 +49,8 @@
     ;; Right column
     ;; HSL:1240118: denylist drops 717->Rautatientori dir 1, keeps 999.
     {:gtfsId "HSL:1240118" :name "Kumpulan kampus" :vehicleMode "BUS"
+     :routes [{:gtfsId "HSL:4717" :alerts [{:alertHeaderText "717 peruttu"}]}   ; hidden route
+              {:gtfsId "HSL:9999" :alerts [{:alertHeaderText "999 myöhässä"}]}] ; visible route
      :stoptimesForPatterns
      [(pattern "HSL:4717" "717" "Rautatientori" 1
                [(stoptime "HSL:1240118" 50000)])   ; hidden
@@ -113,8 +115,10 @@
       (is (true? (:metro dep))))))
 
 (deftest alerts-deduped-test
-  (testing "stop + route alerts are collected and order-preservingly deduped"
-    (is (= ["Bussi 55 poikkeusreitti" "Linja 55 myöhässä"] (:alerts result)))))
+  (testing "stop + visible-route alerts are collected and order-preservingly deduped"
+    (is (= ["Bussi 55 poikkeusreitti" "Linja 55 myöhässä" "999 myöhässä"] (:alerts result))))
+  (testing "alerts for a hidden route are excluded"
+    (is (not (some #{"717 peruttu"} (:alerts result))))))
 
 (deftest stop-names-override-test
   (testing "same-named stops group separately under their :stop-names labels"

@@ -14,7 +14,7 @@
     gtfsId
     vehicleMode
     alerts { alertHeaderText }
-    routes { alerts { alertHeaderText } }
+    routes { gtfsId alerts { alertHeaderText } }
     stoptimesForPatterns(numberOfDepartures: $numberOfDepartures, omitCanceled: false) {
       pattern {
         directionId

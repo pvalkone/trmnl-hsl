@@ -35,14 +35,19 @@
        (:directionId pattern)))
 
 (defn stop-alerts
-  "Deduped alert header texts (stop-level + route-level) across `ids`."
-  [by-id ids]
+  "Deduped alert header texts across the board's `stops` — an ordered seq of
+   `[stop-id visible-route-gtfsIds]`. Includes every stop's own alerts, plus
+   route-level alerts only for routes with a visible pattern at that stop."
+  [by-id stops]
   (dedup
-   (for [sid ids
+   (for [[sid route-ids] stops
          :let [stop (get by-id sid)]
          :when stop
          text (concat (keep :alertHeaderText (:alerts stop))
-                      (mapcat #(keep :alertHeaderText (:alerts %)) (:routes stop)))]
+                      (for [route (:routes stop)
+                            :when (contains? route-ids (:gtfsId route))
+                            t (keep :alertHeaderText (:alerts route))]
+                        t))]
      text)))
 
 (defn- visible?
@@ -51,6 +56,18 @@
   [show hidden rk]
   (and (or (nil? show) (contains? show rk))
        (not (contains? hidden rk))))
+
+(defn- visible-route-ids
+  "gtfsIds of routes at `sid` in column `col` with at least one visible pattern,
+   i.e. the routes actually shown for that stop."
+  [by-id col sid]
+  (let [stop (get by-id sid)
+        hidden (set (get (:hidden-routes col) sid []))
+        show (some-> (:show-routes col) (get sid) set)]
+    (into #{}
+          (for [stp (:stoptimesForPatterns stop)
+                :when (visible? show hidden (route-key (:pattern stp)))]
+            (get-in stp [:pattern :route :gtfsId])))))
 
 (defn- departure-at
   "Absolute epoch second of stoptime `st`: realtime when live, else scheduled."
@@ -125,6 +142,10 @@
   (let [by-id (index-by-gtfs-id data)
         left-col (get-in config [:columns :left])
         right-col (get-in config [:columns :right])
+        alert-stops (into (mapv (fn [sid] [sid (visible-route-ids by-id left-col sid)])
+                                (:stop-ids left-col))
+                          (mapv (fn [sid] [sid (visible-route-ids by-id right-col sid)])
+                                (:stop-ids right-col)))
         local (zoned now)]
     {:title (:title config)
      :generated now
@@ -133,4 +154,4 @@
      :date (str (.getDayOfMonth local) "." (.getMonthValue local) ".")
      :left (build-column by-id left-col)
      :right (build-column by-id right-col)
-     :alerts (stop-alerts by-id (into (:stop-ids left-col) (:stop-ids right-col)))}))
+     :alerts (stop-alerts by-id alert-stops)}))
