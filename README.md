@@ -69,6 +69,8 @@ open http://localhost:4001/preview/kotisaarenkatu           # Eyeball the full b
 
 `kotisaarenkatu` is the board slug (a key in `boards`, see below).
 
+## Tests and checks
+
 The data transform ([`board.clj`](src/hsl/board.clj)) and the alert/pluralisation
 logic ([`render.clj`](src/hsl/render.clj)) are covered by unit tests in `test/hsl/`.
 
@@ -84,7 +86,7 @@ regenerate and review the diff:
 UPDATE_SNAPSHOTS=1 bb test
 ```
 
-The code can be linted with [clj-kondo](https://github.com/clj-kondo/clj-kondo)
+The Clojure code is linted with [clj-kondo](https://github.com/clj-kondo/clj-kondo)
 and checked for formatting with [cljfmt](https://github.com/weavejester/cljfmt):
 
 ```sh
@@ -92,7 +94,25 @@ clj-kondo --lint src views test
 cljfmt check src views test
 ```
 
-All three run in CI on every pull request (see
+The shell scripts are checked with [shellcheck](https://www.shellcheck.net/) and
+[shfmt](https://github.com/mvdan/sh):
+
+```sh
+shellcheck run.sh deploy/freebsd/trmnl_hsl
+shfmt -i 2 -ci -sr -d run.sh deploy/freebsd/trmnl_hsl
+```
+
+The shell script checks also run as a local [prek](https://github.com/j178/prek)
+hook from [`.pre-commit-config.yaml`](.pre-commit-config.yaml).
+With `shellcheck` and `shfmt` on your `PATH`, enable it once to run them on every
+commit.
+
+```sh
+brew install prek
+prek install
+```
+
+All of these run in CI on every pull request (see
 [`.github/workflows/run-checks.yml`](.github/workflows/run-checks.yml)). To run
 the workflow locally with [act](https://github.com/nektos/act):
 
