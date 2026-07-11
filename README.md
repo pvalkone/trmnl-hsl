@@ -260,6 +260,10 @@ Architecture inspired by
 Departure data © [Digitransit](https://digitransit.fi/en/), licenced
 [CC BY 4.0](https://creativecommons.org/licences/by/4.0/).
 
+Mode and alert icons from
+[Material Symbols](https://github.com/google/material-design-icons), licenced
+under the [Apache Licence 2.0](https://www.apache.org/licenses/LICENSE-2.0).
+
 ## Licence
 
 MIT. See [LICENCE](LICENCE).
