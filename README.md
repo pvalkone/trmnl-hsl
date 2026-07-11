@@ -97,7 +97,7 @@ All three run in CI on every pull request (see
 the workflow locally with [act](https://github.com/nektos/act):
 
 ```sh
-act pull_request -P ubuntu-latest=catthehacker/ubuntu:act-latest
+act pull_request -P ubuntu-24.04=catthehacker/ubuntu:act-latest
 ```
 
 ## Configuration
