@@ -33,7 +33,7 @@ trmnl_hsl_precmd() {
   # Pre-create PID/log owned by the run user (their dirs are root-only).
   install -o "${trmnl_hsl_user}" -g "${trmnl_hsl_user}" -m 644 /dev/null "${pidfile}"
   # Create the log only when missing so restarts append to it rather than truncating.
-  [ -e "${logfile}" ] || install -o "${trmnl_hsl_user}" -g "${trmnl_hsl_user}" -m 644 /dev/null "${logfile}"
+  [ -e "${logfile}" ] || install -o "${trmnl_hsl_user}" -g "${trmnl_hsl_user}" -m 640 /dev/null "${logfile}"
 }
 
 load_rc_config $name
