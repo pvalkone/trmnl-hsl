@@ -215,6 +215,18 @@ sysrc trmnl_hsl_enable=YES
 service trmnl_hsl start
 ```
 
+### Health checks
+
+`GET /health` returns per-board status JSON. It responds `200` once at least
+one board has loaded and `503` while none has (e.g. a bad key or an upstream
+that was down at start-up).
+
+Serving any board proves the key is good and Digitransit is responding, so a
+plain uptime check on the status code catches a broken key or backend.
+
+It does not treat a stale cache as unhealthy: refetches are lazy, so an old
+`cached_at` just means a board hasn't been requested recently.
+
 ## Acknowledgements
 
 Architecture inspired by
