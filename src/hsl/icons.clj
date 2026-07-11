@@ -18,3 +18,7 @@
    "SUBWAY" (svg-data-uri "icons/subway.svg")
    "RAIL"   (svg-data-uri "icons/train.svg")
    "FERRY"  (svg-data-uri "icons/ferry.svg")})
+
+(def alerts-icon
+  "Inline data-URI for the service alerts heading icon."
+  (svg-data-uri "icons/alert.svg"))
