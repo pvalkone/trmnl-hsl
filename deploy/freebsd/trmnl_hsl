@@ -6,6 +6,11 @@
 # REQUIRE: NETWORKING
 # KEYWORD: shutdown
 #
+# rc.subr reads the contract variables set below by name, so they look
+# unused to shellcheck.
+# shellcheck disable=SC2034
+#
+# shellcheck source=/dev/null
 . /etc/rc.subr
 
 name="trmnl_hsl"
