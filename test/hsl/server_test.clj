@@ -45,7 +45,8 @@
 (deftest refetch-failure-serves-stale-and-flags-cache
   (let [{:keys [cache] :as handle} (handle-with-cache {:board {:loaded true}
                                                        :fetched-at-ms 0})]
-    (with-redefs [server/fetch-board! (fn [_ _] (throw (ex-info "DT down" {})))]
+    (with-redefs [server/fetch-board! (fn [_ _] (throw (ex-info "DT down" {})))
+                  server/log-error! (constantly nil)]
       (is (= {:loaded true} (server/board-cached! handle)) "serves the last-good board")
       (is (:refresh-failing? @cache) "flags the cache as failing"))))
 
@@ -86,7 +87,8 @@
   ;; An unexpected error must not echo the exception message to the client
   (let [state (state-with {"board" nil})]
     (with-redefs [server/fetch-board!
-                  (fn [_ _] (throw (ex-info "super secret internal detail" {})))]
+                  (fn [_ _] (throw (ex-info "super secret internal detail" {})))
+                  server/log-error! (constantly nil)]
       (let [resp ((server/handler state) {:uri "/api/trmnl/board"})]
         (is (= 500 (:status resp)))
         (is (not (re-find #"super secret internal detail" (:body resp)))
