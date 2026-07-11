@@ -14,8 +14,8 @@ jobs:
       - uses: DeLaGuardo/setup-clojure@13
         with:
           bb: 1.12.218
-          clj-kondo: latest
-          cljfmt: latest
+          clj-kondo: 2026.05.25
+          cljfmt: 0.16.4
       - name: Lint
         run: clj-kondo --lint src views test
       - name: Check formatting
