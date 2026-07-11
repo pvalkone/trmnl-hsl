@@ -4,6 +4,6 @@
          :requires ([hsl.server :as server])
          :task (server/-main)}
   test  {:doc "Run the unit tests"
-         :requires ([clojure.test :as t] [hsl.board-test] [hsl.digitransit-test] [hsl.render-test] [hsl.snapshot-test])
-         :task (let [{:keys [fail error]} (t/run-tests 'hsl.board-test 'hsl.digitransit-test 'hsl.render-test 'hsl.snapshot-test)]
+         :requires ([clojure.test :as t] [hsl.board-test] [hsl.digitransit-test] [hsl.render-test] [hsl.server-test] [hsl.snapshot-test])
+         :task (let [{:keys [fail error]} (t/run-tests 'hsl.board-test 'hsl.digitransit-test 'hsl.render-test 'hsl.server-test 'hsl.snapshot-test)]
                  (System/exit (if (pos? (+ fail error)) 1 0)))}}}

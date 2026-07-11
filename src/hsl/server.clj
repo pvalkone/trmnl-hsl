@@ -113,6 +113,17 @@
    :headers {"Content-Type" "application/json; charset=utf-8"}
    :body (json/generate-string body)})
 
+(defn- health-response
+  "Return 200 once at least one board has served, otherwise 503: serving any
+   board proves the key and Digitransit backend work."
+  [state]
+  (let [boards (into {} (for [[slug handle] (:boards state)]
+                          [slug (board-health handle)]))
+        healthy? (boolean (some :has_board (vals boards)))]
+    (json-response (if healthy? 200 503)
+                   {:status (if healthy? "ok" "degraded")
+                    :boards boards})))
+
 (defn- path-segments
   "URI split into non-empty path segments, e.g. \"/api/trmnl/foo\" -> [\"api\" \"trmnl\" \"foo\"]."
   [uri]
@@ -139,9 +150,7 @@
 
           ;; /health
           (= ["health"] segments)
-          (json-response 200 {:status "ok"
-                              :boards (into {} (for [[slug handle] (:boards state)]
-                                                 [slug (board-health handle)]))})
+          (health-response state)
 
           :else
           (json-response 404 {:error "not found"})))
