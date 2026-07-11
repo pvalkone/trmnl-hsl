@@ -227,7 +227,10 @@ egress IPs, available at <https://trmnl.com/api/ips>.
 ### Run as a service
 
 An example FreeBSD (`rc.d`) service script is in
-[`deploy/freebsd/trmnl_hsl`](deploy/freebsd/trmnl_hsl). To install it:
+[`deploy/freebsd/trmnl_hsl`](deploy/freebsd/trmnl_hsl), with a matching
+[`newsyslog`](https://man.freebsd.org/newsyslog) config in
+[`deploy/freebsd/trmnl_hsl.conf`](deploy/freebsd/trmnl_hsl.conf) to rotate the
+log. To install them:
 
 ```sh
 install -m 755 deploy/freebsd/trmnl_hsl /usr/local/etc/rc.d/trmnl_hsl
