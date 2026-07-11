@@ -81,3 +81,15 @@
         {:keys [status parsed]} (health state)]
     (is (= 200 status))
     (is (= "ok" (:status parsed)))))
+
+(deftest internal-error-returns-generic-500
+  ;; An unexpected error must not echo the exception message to the client
+  (let [state (state-with {"board" nil})]
+    (with-redefs [server/fetch-board!
+                  (fn [_ _] (throw (ex-info "super secret internal detail" {})))]
+      (let [resp ((server/handler state) {:uri "/api/trmnl/board"})]
+        (is (= 500 (:status resp)))
+        (is (not (re-find #"super secret internal detail" (:body resp)))
+            "does not leak the exception message")
+        (is (= "internal server error"
+               (:error (json/parse-string (:body resp) true))))))))
