@@ -104,6 +104,16 @@
   (when-let [handle (get (:boards state) slug)]
     (assoc handle :api-key (:api-key state) :ttl-ms (:ttl-ms state))))
 
+(defn warm-cache!
+  "Fetch every board once at startup so /health is accurate immediately after a
+   restart and the first poll is fast. Per-board failures are logged by
+   board-cached! and left for the next load."
+  [state]
+  (log! "Warming board caches")
+  (doseq [slug (keys (:boards state))]
+    (try (board-cached! (board-handle state slug))
+         (catch Exception _ nil))))
+
 (defn- board-health [{:keys [cache config]}]
   (let [{:keys [board fetched-at-ms refresh-failing?]} @cache]
     {:title (:title config)
@@ -184,4 +194,6 @@
                                            (stop-server))))
     (log! (str "Server started on port " port " (TTL " ttl-ms "ms). Boards: "
                (str/join ", " (keys config/boards))))
+    (warm-cache! state)
+    (log! "Startup complete")
     @(promise)))

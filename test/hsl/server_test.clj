@@ -132,3 +132,20 @@
         resp ((server/handler state) {:uri "/nope"})]
     (is (= 404 (:status resp)))
     (is (= "not found" (:error (json/parse-string (:body resp) true))))))
+
+(deftest warm-cache-loads-every-board
+  (let [state (state-with {"a" nil "b" nil})]
+    (with-redefs [server/fetch-board! (fn [_ _] {:loaded true})
+                  server/log! (constantly nil)]
+      (server/warm-cache! state)
+      (is (every? (fn [h] (some? (:board @(:cache h)))) (vals (:boards state)))
+          "every board cache is populated after warming"))))
+
+(deftest warm-cache-tolerates-a-failing-board
+  ;; A board that can't load must not abort start-up; it's left empty.
+  (let [state (state-with {"a" nil})]
+    (with-redefs [server/fetch-board! (fn [_ _] (throw (ex-info "DT down" {})))
+                  server/log! (constantly nil)
+                  server/log-error! (constantly nil)]
+      (server/warm-cache! state)
+      (is (nil? (:board @(:cache (get (:boards state) "a"))))))))
