@@ -248,8 +248,10 @@ was down at start-up).
 A board is serving when it has loaded at least once (`has_board`) and its most
 recent refetch didn't fail (`refresh_failing`).
 
-It does not treat a stale cache as unhealthy: refetches are lazy, so an old
-`cached_at` just means a board hasn't been requested recently.
+On startup every board is fetched once, so `/health` is accurate within a
+second or two of a restart rather than reporting degraded until the first
+poll. After that, refetches are lazy: an old `cached_at` just means a board
+hasn't been requested recently.
 
 ## Acknowledgements
 
