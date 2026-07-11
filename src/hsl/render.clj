@@ -1,6 +1,7 @@
 (ns hsl.render
   "Renders the board map into TRMNL layout markup with Selmer."
-  (:require [selmer.parser :as selmer]))
+  (:require [hsl.icons :as icons]
+            [selmer.parser :as selmer]))
 
 (def ^:private max-alerts 2)
 
@@ -22,7 +23,8 @@
            ;; nil (not []) when empty: Selmer treats an empty collection as
            ;; truthy, so `{% if alerts %}` would otherwise show the heading
            :alerts (not-empty (vec (take max-alerts alerts)))
-           :alerts_overflow (overflow-label extra))))
+           :alerts_overflow (overflow-label extra)
+           :alerts_icon icons/alerts-icon)))
 
 (defn render-full
   "Markup for the device's full layout."
