@@ -78,8 +78,9 @@
   "Return a board map for a single board, refetching when its cache is older
    than `ttl-ms`.
 
-   On a refetch failure, serve the last-good board (logging the error);
-   only propagate if we have never had a good board."
+   On a refetch failure, serve the last-good board and flag the cache as
+   `:refresh-failing?`; only propagate if we have never had a good board.
+   A later successful refetch replaces the cache, clearing the flag."
   [{:keys [cache config api-key ttl-ms]}]
   (let [{:keys [board fetched-at-ms]} @cache
         stale? (or (nil? board) (> (- (now-ms) fetched-at-ms) ttl-ms))]
@@ -91,7 +92,9 @@
           fresh)
         (catch Exception e
           (log-error! "Board refetch failed:" (ex-message e))
-          (or board (throw e)))))))
+          (if board
+            (do (swap! cache assoc :refresh-failing? true) board)
+            (throw e)))))))
 
 (defn board-handle
   "The per-board cache/config handle for `slug`, merged with the shared
@@ -102,11 +105,17 @@
     (assoc handle :api-key (:api-key state) :ttl-ms (:ttl-ms state))))
 
 (defn- board-health [{:keys [cache config]}]
-  (let [{:keys [board fetched-at-ms]} @cache]
+  (let [{:keys [board fetched-at-ms refresh-failing?]} @cache]
     {:title (:title config)
      :stops (config/stop-ids config)
      :cached_at fetched-at-ms
-     :has_board (some? board)}))
+     :has_board (some? board)
+     :refresh_failing (boolean refresh-failing?)}))
+
+(defn- serving?
+  "A board is serving when it has loaded and its latest refetch didn't fail."
+  [{:keys [has_board refresh_failing]}]
+  (and has_board (not refresh_failing)))
 
 (defn- json-response [status body]
   {:status status
@@ -114,12 +123,11 @@
    :body (json/generate-string body)})
 
 (defn- health-response
-  "Return 200 once at least one board has served, otherwise 503: serving any
-   board proves the key and Digitransit backend work."
+  "Return 200 while at least one board is serving, otherwise 503."
   [state]
   (let [boards (into {} (for [[slug handle] (:boards state)]
                           [slug (board-health handle)]))
-        healthy? (boolean (some :has_board (vals boards)))]
+        healthy? (boolean (some serving? (vals boards)))]
     (json-response (if healthy? 200 503)
                    {:status (if healthy? "ok" "degraded")
                     :boards boards})))

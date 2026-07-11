@@ -35,3 +35,49 @@
   (let [{:keys [status parsed]} (health (state-with {"a" {:loaded true} "b" nil}))]
     (is (= 200 status))
     (is (= "ok" (:status parsed)))))
+
+(defn- handle-with-cache
+  "A board handle whose cache atom starts as `cache-contents`."
+  [cache-contents]
+  (let [[_ cfg] (first config/boards)]
+    {:cache (atom cache-contents) :config cfg :api-key "x" :ttl-ms 60000}))
+
+(deftest refetch-failure-serves-stale-and-flags-cache
+  (let [{:keys [cache] :as handle} (handle-with-cache {:board {:loaded true}
+                                                       :fetched-at-ms 0})]
+    (with-redefs [server/fetch-board! (fn [_ _] (throw (ex-info "DT down" {})))]
+      (is (= {:loaded true} (server/board-cached! handle)) "serves the last-good board")
+      (is (:refresh-failing? @cache) "flags the cache as failing"))))
+
+(deftest successful-refetch-clears-failing-flag
+  (let [{:keys [cache] :as handle} (handle-with-cache {:board {:stale true}
+                                                       :fetched-at-ms 0
+                                                       :refresh-failing? true})]
+    (with-redefs [server/fetch-board! (fn [_ _] {:fresh true})]
+      (is (= {:fresh true} (server/board-cached! handle)))
+      (is (nil? (:refresh-failing? @cache)) "a good refetch clears the flag"))))
+
+(deftest health-degraded-when-only-board-is-refresh-failing
+  (let [[_ cfg] (first config/boards)
+        state {:boards {"a" {:cache (atom {:board {:loaded true}
+                                           :fetched-at-ms 0
+                                           :refresh-failing? true})
+                             :config cfg}}
+               :api-key "x" :ttl-ms 60000}
+        {:keys [status parsed]} (health state)]
+    (is (= 503 status))
+    (is (= "degraded" (:status parsed)))
+    (is (true? (get-in parsed [:boards :a :refresh_failing])))))
+
+(deftest health-ok-when-a-board-serves-despite-another-failing
+  (let [[_ cfg] (first config/boards)
+        state {:boards {"a" {:cache (atom {:board {:loaded true} :fetched-at-ms 0})
+                             :config cfg}
+                        "b" {:cache (atom {:board {:loaded true}
+                                           :fetched-at-ms 0
+                                           :refresh-failing? true})
+                             :config cfg}}
+               :api-key "x" :ttl-ms 60000}
+        {:keys [status parsed]} (health state)]
+    (is (= 200 status))
+    (is (= "ok" (:status parsed)))))
