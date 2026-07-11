@@ -1,7 +1,8 @@
 (ns hsl.board
   "Transforms Digitransit GraphQL `data` to the board map the templates
    render."
-  (:require [clojure.string :as str])
+  (:require [clojure.string :as str]
+            [hsl.icons :as icons])
   (:import (java.time Instant ZoneId ZonedDateTime)
            (java.time.format DateTimeFormatter)))
 
@@ -115,20 +116,23 @@
 
 (defn build-column
   "One column: departures grouped by stop name, each stop's list sorted by time
-   and evenly capped so the column fits `:rows`."
+   and evenly capped so the column fits `:rows`. Each stop carries an `:icon`
+   for its mode that comes from its first (earliest) departure, so a mixed-mode
+   stop will show only that departure's icon."
   [by-id col]
   (let [deps (departures by-id col)
         names (dedup (for [sid (:stop-ids col)
                            :when (get by-id sid)]
                        (stop-name col by-id sid)))
         per-stop (max 1 (long (Math/floor (/ (:rows col) (double (max 1 (count names)))))))]
-    {:stops (vec (for [nm names]
+    {:stops (vec (for [nm names
+                       :let [nm-deps (->> deps
+                                          (filter #(= (:name %) nm))
+                                          (sort-by :at)
+                                          (take per-stop))]]
                    {:name nm
-                    :deps (->> deps
-                               (filter #(= (:name %) nm))
-                               (sort-by :at)
-                               (take per-stop)
-                               (mapv #(dissoc % :name)))}))}))
+                    :icon (icons/mode-icons (:mode (first nm-deps)))
+                    :deps (mapv #(dissoc % :name) nm-deps)}))}))
 
 (defn index-by-gtfs-id
   "Map gtfsId -> stop, from the GraphQL `data.stops` list."

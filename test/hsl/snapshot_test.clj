@@ -11,6 +11,7 @@
      UPDATE_SNAPSHOTS=1 bb test"
   (:require [clojure.java.io :as io]
             [clojure.test :refer [deftest is]]
+            [hsl.icons :as icons]
             [hsl.render :as render]))
 
 (defn- dep [line dest {:keys [metro rt hhmm]}]
@@ -28,14 +29,17 @@
    :left
    {:stops
     [{:name "Kotisaarenkatu"
+      :icon (icons/mode-icons "BUS")
       :deps [(dep "55" "Rautatientori" {:rt true :hhmm "17:05"})
              (dep "55" "Rautatientori" {:hhmm "17:15"})
              (dep "506" "Myllypuro" {:metro true :hhmm "17:20"})]}
      {:name "Intiankatu"
+      :icon (icons/mode-icons "TRAM")
       :deps [(dep "57" "Munkkivuori" {:hhmm "17:08"})]}]}
    :right
    {:stops
     [{:name "Kumpulan kampus"
+      :icon (icons/mode-icons "SUBWAY")
       :deps [(dep "71" "Malmi" {:rt true :hhmm "17:06"})
              (dep "78" "Rautatientori via Kalasatama ja Sörnäinen" {:hhmm "17:12"})]}]}
    :alerts ["Bussi 55 poikkeusreitti"

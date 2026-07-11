@@ -6,7 +6,7 @@
                 <tbody>
                 {% for stop in left.stops %}
                 <tr>
-                    <td colspan="3"><span class="title">{{ stop.name }}</span></td>
+                    <td colspan="3"><div style="display: flex; align-items: center; gap: 10px;">{% if stop.icon %}<img class="image" style="height: 26px;" src="{{ stop.icon }}"/>{% endif %}<span class="title">{{ stop.name }}</span></div></td>
                 </tr>
                 <tr>
                     <td><span class="title title--small">Linja</span></td>
@@ -30,7 +30,7 @@
                 <tbody>
                 {% for stop in right.stops %}
                 <tr>
-                    <td colspan="3"><span class="title">{{ stop.name }}</span></td>
+                    <td colspan="3"><div style="display: flex; align-items: center; gap: 10px;">{% if stop.icon %}<img class="image" style="height: 26px;" src="{{ stop.icon }}"/>{% endif %}<span class="title">{{ stop.name }}</span></div></td>
                 </tr>
                 <tr>
                     <td><span class="title title--small">Linja</span></td>
