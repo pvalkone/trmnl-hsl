@@ -1,4 +1,4 @@
-{:paths ["src" "views" "test"]
+{:paths ["src" "views" "test" "resources"]
  :tasks
  {serve {:doc "Start the TRMNL HSL departure board server"
          :requires ([hsl.server :as server])

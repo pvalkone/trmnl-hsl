@@ -11,7 +11,7 @@ rather than rendering blank.
         <tbody>
         {% for stop in left.stops %}
         <tr>
-            <td colspan="2"><span class="title title--small">{{ stop.name }}</span></td>
+            <td colspan="2"><div style="display: flex; align-items: center; gap: 6px;">{% if stop.icon %}<img class="image" style="height: 18px;" src="{{ stop.icon }}"/>{% endif %}<span class="title title--small">{{ stop.name }}</span></div></td>
         </tr>
         {% for dep in stop.deps %}
         <tr>
