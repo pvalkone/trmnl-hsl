@@ -4,7 +4,13 @@
   (:require [babashka.http-client :as http]
             [cheshire.core :as json]))
 
-(def endpoint "https://api.digitransit.fi/routing/v2/hsl/gtfs/v1")
+(def default-endpoint "https://api.digitransit.fi/routing/v2/hsl/gtfs/v1")
+
+;; Bound the outbound call so a slow or unresponsive upstream can't wedge a
+;; request thread indefinitely. A timeout surfaces as an exception, which the
+;; caller turns into a last-good (stale-cache) response.
+(def default-connect-timeout-ms 5000)
+(def default-request-timeout-ms 10000)
 
 (def query
   "query GetDeparturesForStops($ids: [String!]!, $numberOfDepartures: Int!) {
@@ -35,14 +41,25 @@
 
 (defn fetch!
   "POST the departures query for `ids` and return the parsed `data` map.
-   Throws (ex-info) on transport failure or GraphQL `errors`."
-  [{:keys [api-key ids number-of-departures]}]
-  (let [body (json/generate-string
+   Throws (ex-info) on transport failure or GraphQL `errors`, and a
+   `HttpTimeoutException` if the upstream is too slow.
+
+   Optional `:endpoint`, `:connect-timeout-ms` and `:request-timeout-ms`
+   override the defaults (mainly for tests)."
+  [{:keys [api-key ids number-of-departures endpoint
+           connect-timeout-ms request-timeout-ms]}]
+  (let [endpoint (or endpoint default-endpoint)
+        connect-timeout-ms (or connect-timeout-ms default-connect-timeout-ms)
+        request-timeout-ms (or request-timeout-ms default-request-timeout-ms)
+        body (json/generate-string
               {:operationName "GetDeparturesForStops"
                :variables {:ids ids :numberOfDepartures number-of-departures}
                :query query})
+        client (http/client {:connect-timeout connect-timeout-ms})
         resp (http/post endpoint
-                        {:headers {"Content-Type" "application/json"
+                        {:client client
+                         :timeout request-timeout-ms
+                         :headers {"Content-Type" "application/json"
                                    "digitransit-subscription-key" api-key}
                          :body body})
         parsed (json/parse-string (:body resp) true)]
