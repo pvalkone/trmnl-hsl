@@ -102,17 +102,17 @@ shellcheck run.sh deploy/freebsd/trmnl_hsl
 shfmt -i 2 -ci -sr -d run.sh deploy/freebsd/trmnl_hsl
 ```
 
-The shell script checks also run as a local [prek](https://github.com/j178/prek)
-hook from [`.pre-commit-config.yaml`](.pre-commit-config.yaml).
-With `shellcheck` and `shfmt` on your `PATH`, enable it once to run them on every
-commit.
+All four checks above also run as a local [prek](https://github.com/j178/prek)
+hook from [`.pre-commit-config.yaml`](.pre-commit-config.yaml). With `clj-kondo`,
+`cljfmt`, `shellcheck` and `shfmt` on your `PATH`, enable it once to run them on
+every commit:
 
 ```sh
 brew install prek
 prek install
 ```
 
-All of these run in CI on every pull request (see
+CI runs the same hooks on every pull request (see
 [`.github/workflows/run-checks.yml`](.github/workflows/run-checks.yml)). To run
 the workflow locally with [act](https://github.com/nektos/act):
 

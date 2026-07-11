@@ -1,6 +1,16 @@
 repos:
   - repo: local
     hooks:
+      - id: clj-kondo
+        name: clj-kondo
+        entry: clj-kondo --lint
+        language: system
+        files: \.clj[cs]?$
+      - id: cljfmt
+        name: cljfmt
+        entry: cljfmt check
+        language: system
+        files: \.clj[cs]?$
       - id: shellcheck
         name: shellcheck
         entry: shellcheck
