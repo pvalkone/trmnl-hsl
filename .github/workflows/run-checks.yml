@@ -16,9 +16,17 @@ jobs:
           bb: 1.12.218
           clj-kondo: 2026.05.25
           cljfmt: 0.16.4
-      - name: Lint
+      - name: Lint Clojure code
         run: clj-kondo --lint src views test
       - name: Check formatting
         run: cljfmt check src views test
       - name: Run tests
         run: bb test
+      - name: Install shell linters
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y shellcheck=0.9.0-1 shfmt=3.8.0-1
+      - name: Check shell scripts
+        uses: j178/prek-action@v2
+        with:
+          prek-version: 0.4.8
