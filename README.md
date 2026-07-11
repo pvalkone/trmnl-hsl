@@ -231,6 +231,7 @@ An example FreeBSD (`rc.d`) service script is in
 
 ```sh
 install -m 755 deploy/freebsd/trmnl_hsl /usr/local/etc/rc.d/trmnl_hsl
+install -m 644 deploy/freebsd/trmnl_hsl.conf /usr/local/etc/newsyslog.conf.d/trmnl_hsl.conf
 sysrc trmnl_hsl_enable=YES
 service trmnl_hsl start
 ```
