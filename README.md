@@ -103,12 +103,11 @@ shfmt -i 2 -ci -sr -d run.sh deploy/freebsd/trmnl_hsl
 ```
 
 All four checks above also run as a local [prek](https://github.com/j178/prek)
-hook from [`.pre-commit-config.yaml`](.pre-commit-config.yaml). With `clj-kondo`,
-`cljfmt`, `shellcheck` and `shfmt` on your `PATH`, enable it once to run them on
-every commit:
+hook from [`.pre-commit-config.yaml`](.pre-commit-config.yaml). With `prek` and
+those four tools on your `PATH`, enable the hook once to run them on every
+commit:
 
 ```sh
-brew install prek
 prek install
 ```
 
