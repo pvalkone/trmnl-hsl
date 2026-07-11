@@ -14,5 +14,11 @@ jobs:
       - uses: DeLaGuardo/setup-clojure@13
         with:
           bb: latest
+          clj-kondo: latest
+          cljfmt: latest
+      - name: Lint
+        run: clj-kondo --lint src views test
+      - name: Check formatting
+        run: cljfmt check src views test
       - name: Run tests
         run: bb test
