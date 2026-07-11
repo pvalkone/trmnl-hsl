@@ -6,12 +6,13 @@ The board is designed for full-view (TRMNL X, 1872×1404); this just keeps the
 smaller layout keys populated with the next departures from the left column
 rather than rendering blank.
 {% endcomment %}
+<style>.heading-row { display: flex; align-items: center; gap: 6px; }</style>
 <div class="layout">
     <table class="table">
         <tbody>
         {% for stop in left.stops %}
         <tr>
-            <td colspan="2"><div style="display: flex; align-items: center; gap: 6px;">{% if stop.icon %}<img class="image" style="height: 18px;" src="{{ stop.icon }}"/>{% endif %}<span class="title title--small">{{ stop.name }}</span></div></td>
+            <td colspan="2"><div class="heading-row">{% if stop.icon %}<img class="image" style="height: 18px;" src="{{ stop.icon }}"/>{% endif %}<span class="title title--small">{{ stop.name }}</span></div></td>
         </tr>
         {% for dep in stop.deps %}
         <tr>
