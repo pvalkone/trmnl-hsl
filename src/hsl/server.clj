@@ -163,8 +163,9 @@
           :else
           (json-response 404 {:error "not found"})))
       (catch Exception e
+        ;; Log the detail server-side, but don't leak internals to the client
         (log-error! "Request error:" (ex-message e))
-        (json-response 500 {:error (ex-message e)})))))
+        (json-response 500 {:error "internal server error"})))))
 
 (defn -main [& _]
   (let [dotenv (load-dotenv! ".env")
