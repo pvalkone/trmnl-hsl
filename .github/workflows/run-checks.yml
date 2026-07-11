@@ -1,0 +1,18 @@
+name: Run checks
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  checks:
+    name: Pre-merge checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: DeLaGuardo/setup-clojure@13
+        with:
+          bb: latest
+      - name: Run tests
+        run: bb test
