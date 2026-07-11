@@ -3,6 +3,7 @@
   (:require [cheshire.core :as json]
             [clojure.test :refer [deftest is]]
             [hsl.config :as config]
+            [hsl.render :as render]
             [hsl.server :as server]))
 
 (defn- state-with
@@ -95,3 +96,39 @@
             "does not leak the exception message")
         (is (= "internal server error"
                (:error (json/parse-string (:body resp) true))))))))
+
+(deftest api-route-serves-rendered-markup
+  (let [state (state-with {"kotisaarenkatu" {:loaded true}})]
+    (with-redefs [server/board-cached! (fn [_] :board)
+                  render/render-all (fn [_] {:markup "M"})]
+      (let [resp ((server/handler state) {:uri "/api/trmnl/kotisaarenkatu"})]
+        (is (= 200 (:status resp)))
+        (is (= "application/json; charset=utf-8" (get-in resp [:headers "Content-Type"])))
+        (is (= "M" (:markup (json/parse-string (:body resp) true))))))))
+
+(deftest preview-route-serves-html
+  (let [state (state-with {"kotisaarenkatu" {:loaded true}})]
+    (with-redefs [server/board-cached! (fn [_] :board)
+                  render/render-preview (fn [_] "<html>ok</html>")]
+      (let [resp ((server/handler state) {:uri "/preview/kotisaarenkatu"})]
+        (is (= 200 (:status resp)))
+        (is (= "text/html; charset=utf-8" (get-in resp [:headers "Content-Type"])))
+        (is (= "<html>ok</html>" (:body resp)))))))
+
+(deftest api-route-unknown-board-404
+  (let [state (state-with {"kotisaarenkatu" {:loaded true}})
+        resp ((server/handler state) {:uri "/api/trmnl/nope"})]
+    (is (= 404 (:status resp)))
+    (is (= "unknown board" (:error (json/parse-string (:body resp) true))))))
+
+(deftest preview-route-unknown-board-404
+  (let [state (state-with {"kotisaarenkatu" {:loaded true}})
+        resp ((server/handler state) {:uri "/preview/nope"})]
+    (is (= 404 (:status resp)))
+    (is (= "unknown board" (:error (json/parse-string (:body resp) true))))))
+
+(deftest unmatched-route-404
+  (let [state (state-with {"kotisaarenkatu" {:loaded true}})
+        resp ((server/handler state) {:uri "/nope"})]
+    (is (= 404 (:status resp)))
+    (is (= "not found" (:error (json/parse-string (:body resp) true))))))
