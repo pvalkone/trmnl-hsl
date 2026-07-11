@@ -74,6 +74,22 @@ logic ([`render.clj`](src/hsl/render.clj)) are covered by unit tests in `test/hs
 
 Run the tests with `bb test`.
 
+The code can be linted with [clj-kondo](https://github.com/clj-kondo/clj-kondo)
+and checked for formatting with [cljfmt](https://github.com/weavejester/cljfmt):
+
+```sh
+clj-kondo --lint src views test
+cljfmt check src views test
+```
+
+All three run in CI on every pull request (see
+[`.github/workflows/run-checks.yml`](.github/workflows/run-checks.yml)). To run
+the workflow locally with [act](https://github.com/nektos/act):
+
+```sh
+act pull_request -P ubuntu-latest=catthehacker/ubuntu:act-latest
+```
+
 ## Configuration
 
 ### Environment variables
