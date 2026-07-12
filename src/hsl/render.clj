@@ -40,11 +40,12 @@
 
 (def compact-rows
   "Max departure rows the compact stand-in shows per device layout, so its
-   content fits the layout's cell instead of overflowing. half_vertical is
-   full-height; half_horizontal and quadrant are half-height."
-  {"half_horizontal" 9
-   "half_vertical"   12
-   "quadrant"        8})
+   content fits the layout's cell instead of overflowing. `:left`/`:right` are
+   the per-column caps; only the wide half_horizontal shows a `:right` column.
+   The left column caps lower where it carries more stop headings."
+  {"half_horizontal" {:left 6 :right 8}
+   "half_vertical"   {:left 12}
+   "quadrant"        {:left 8}})
 
 (defn- narrow-bar?
   "The half-width layouts, whose title bar can't fit the full alert label."
@@ -65,10 +66,10 @@
    each capped to the rows that fit with a short-badge flag and possible column
    headers."
   [board layout]
-  (let [n (compact-rows layout)
-        left (cap-stops (get-in board [:left :stops]) n)
-        cols (if (= layout "half_horizontal")
-               [left (cap-stops (get-in board [:right :stops]) n)]
+  (let [rows (compact-rows layout)
+        left (cap-stops (get-in board [:left :stops]) (:left rows))
+        cols (if (:right rows)
+               [left (cap-stops (get-in board [:right :stops]) (:right rows))]
                [left])]
     (assoc (context board)
            :cols cols
