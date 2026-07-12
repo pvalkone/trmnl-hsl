@@ -6,7 +6,11 @@ The board is designed for full-view (TRMNL X, 1872×1404); this just keeps the
 smaller layout keys populated with the next departures from the left column
 rather than rendering blank.
 {% endcomment %}
-<style>.heading-row { display: flex; align-items: center; gap: 6px; }</style>
+<style>
+    .heading-row { display: flex; align-items: center; gap: 6px; }
+    .alerts-badge { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: inline-flex; align-items: center; gap: 6px; }
+    .alerts-badge img { height: 18px; }
+</style>
 <div class="layout">
     <table class="table">
         <tbody>
@@ -29,5 +33,6 @@ rather than rendering blank.
 <div class="title_bar">
     <img class="image" src="https://trmnl.com/images/plugins/trmnl--render.svg"/>
     <span class="title">HSL — {{ title }}</span>
+    {% if alerts %}<span class="title alerts-badge"><img class="image" src="{{ alerts_icon }}"/>{{ alerts_label }}</span>{% endif %}
     <span class="instance" style="position: absolute; right: 24px;">{{ clock }} {{ date }}</span>
 </div>
