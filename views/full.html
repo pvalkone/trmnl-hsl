@@ -11,13 +11,13 @@
                 <tr>
                     <td><span class="title title--small">Linja</span></td>
                     <td><span class="title title--small">Määränpää</span></td>
-                    <td><span class="title title--small text-right">Lähtöaika</span></td>
+                    <td class="text--right"><span class="title title--small">Lähtöaika</span></td>
                 </tr>
                 {% for dep in stop.deps %}
                 <tr>
                     <td><span class="label">{{ dep.line }}</span></td>
                     <td><span class="label" data-clamp="1">{{ dep.dest }}{% if dep.metro %} (M){% endif %}</span></td>
-                    <td><span class="label text-right">{% if dep.rt %}~{% endif %}{{ dep.hhmm }}</span></td>
+                    <td class="text--right"><span class="label">{% if dep.rt %}~{% endif %}{{ dep.hhmm }}</span></td>
                 </tr>
                 {% endfor %}
                 {% endfor %}
@@ -35,13 +35,13 @@
                 <tr>
                     <td><span class="title title--small">Linja</span></td>
                     <td><span class="title title--small">Määränpää</span></td>
-                    <td><span class="title title--small text-right">Lähtöaika</span></td>
+                    <td class="text--right"><span class="title title--small">Lähtöaika</span></td>
                 </tr>
                 {% for dep in stop.deps %}
                 <tr>
                     <td><span class="label">{{ dep.line }}</span></td>
                     <td><span class="label" data-clamp="1">{{ dep.dest }}{% if dep.metro %} (M){% endif %}</span></td>
-                    <td><span class="label text-right">{% if dep.rt %}~{% endif %}{{ dep.hhmm }}</span></td>
+                    <td class="text--right"><span class="label">{% if dep.rt %}~{% endif %}{{ dep.hhmm }}</span></td>
                 </tr>
                 {% endfor %}
                 {% endfor %}
