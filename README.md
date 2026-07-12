@@ -73,6 +73,10 @@ open http://localhost:4001/preview/kotisaarenkatu/quadrant  # ...or a specific d
 specific one, where `<layout>` is `full`, `half_horizontal`, `half_vertical` or
 `quadrant`, the same four layouts TRMNL requests as markup fields.
 
+While iterating on the templates or render code, run `bb dev` instead of
+`bb serve`: it watches `src/` and `views/` and reloads on save, so edits show on
+the next request without a restart.
+
 ## Tests and checks
 
 The data transform ([`board.clj`](src/hsl/board.clj)) and the alert/pluralisation
