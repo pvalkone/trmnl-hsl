@@ -167,7 +167,8 @@ its row budget evenly across them:
            :show-routes {"HSL:1230109" ["HSL:1071:71:Malmi:0"]}
            ;; Optional: override the heading for a stop (e.g. to tell apart
            ;; several stops that share a Digitransit name)
-           :stop-names {"HSL:1230109" "Kumpulan kampus (M)"}}}}}
+           :stop-names {"HSL:1240118" "Kumpulan kampus (länteen)"
+                        "HSL:1230109" "Kumpulan kampus (itään)"}}}}}
 ```
 
 - `stop-ids` are Digitransit GTFS stop IDs (e.g. `HSL:1230410`).
