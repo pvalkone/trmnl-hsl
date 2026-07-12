@@ -124,7 +124,7 @@
         names (dedup (for [sid (:stop-ids col)
                            :when (get by-id sid)]
                        (stop-name col by-id sid)))
-        per-stop (max 1 (long (Math/floor (/ (:rows col) (double (max 1 (count names)))))))]
+        per-stop (max 1 (quot (:rows col) (max 1 (count names))))]
     {:stops (vec (for [nm names
                        :let [nm-deps (->> deps
                                           (filter #(= (:name %) nm))
