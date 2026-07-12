@@ -42,7 +42,7 @@
   "Max departure rows the compact stand-in shows per device layout, so its
    content fits the layout's cell instead of overflowing. half_vertical is
    full-height; half_horizontal and quadrant are half-height."
-  {"half_horizontal" 8
+  {"half_horizontal" 9
    "half_vertical"   12
    "quadrant"        8})
 
@@ -51,24 +51,29 @@
   [layout]
   (contains? #{"half_vertical" "quadrant"} layout))
 
-(defn- cap-left-column
-  "Trim `board`'s left column to at most `n` departure rows, split evenly across
-   its stops, so the compact markup fits a short layout's cell."
-  [board n]
-  (update-in board [:left :stops]
-             (fn [stops]
-               (let [per-stop (max 1 (quot n (max 1 (count stops))))]
-                 (mapv (fn [stop]
-                         (update stop :deps #(vec (take per-stop %))))
-                       stops)))))
+(defn- cap-stops
+  "Trim `stops` to at most `n` departure rows, split evenly across the stops, so
+   a compact column fits a short layout's cell."
+  [stops n]
+  (let [per-stop (max 1 (quot n (max 1 (count stops))))]
+    (mapv (fn [stop]
+            (update stop :deps #(vec (take per-stop %))))
+          stops)))
 
 (defn- compact-context
-  "Template context for the compact stand-in in `layout`: the board capped to the
-   rows that fit, plus a short-badge flag for the narrow title bars."
+  "Template context for the compact stand-in in `layout`: the columns it renders,
+   each capped to the rows that fit with a short-badge flag and possible column
+   headers."
   [board layout]
-  (assoc (context (cap-left-column board (compact-rows layout)))
-         :alerts_badge_short (narrow-bar? layout)
-         :column_headers (= layout "half_vertical")))
+  (let [n (compact-rows layout)
+        left (cap-stops (get-in board [:left :stops]) n)
+        cols (if (= layout "half_horizontal")
+               [left (cap-stops (get-in board [:right :stops]) n)]
+               [left])]
+    (assoc (context board)
+           :cols cols
+           :alerts_badge_short (narrow-bar? layout)
+           :column_headers (= layout "half_vertical"))))
 
 (defn render-compact
   "Single-column markup for `layout` (half_horizontal/half_vertical/quadrant),

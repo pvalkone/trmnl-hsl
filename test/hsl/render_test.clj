@@ -37,10 +37,15 @@
         board {:title "T" :clock "12:00" :date "6.7."
                :left {:stops [{:name "A" :icon nil :deps (many "AA")}
                               {:name "B" :icon nil :deps (many "BB")}]}
-               :right {:stops []} :alerts []}
-        rows-shown (fn [layout] (count (re-seq #"(?:AA|BB)\d" (render/render-compact board layout))))]
-    (testing "the short layouts cap the two stops to 8 rows total (4 each)"
-      (is (= 8 (rows-shown "quadrant")))
-      (is (= 8 (rows-shown "half_horizontal"))))
-    (testing "the full-height half_vertical allows up to 12 (6 each)"
-      (is (= 12 (rows-shown "half_vertical"))))))
+               :right {:stops [{:name "C" :icon nil :deps (many "CC")}]}
+               :alerts []}
+        left-shown (fn [layout] (count (re-seq #"(?:AA|BB)\d" (render/render-compact board layout))))
+        right-shown (fn [layout] (count (re-seq #"CC\d" (render/render-compact board layout))))]
+    (testing "the narrow layouts show only the left column, capped to fit"
+      (is (= 8 (left-shown "quadrant")))        ; 2 stops, 4 each
+      (is (= 0 (right-shown "quadrant")))
+      (is (= 12 (left-shown "half_vertical")))  ; full height, 6 each
+      (is (= 0 (right-shown "half_vertical"))))
+    (testing "the wide half_horizontal also shows the right column"
+      (is (= 8 (left-shown "half_horizontal")))   ; 2 stops, 4 each
+      (is (= 9 (right-shown "half_horizontal")))))) ; 1 stop, 9 deps
