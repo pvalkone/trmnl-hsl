@@ -32,6 +32,12 @@
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.18);
         }
 
+        /* Empty mashup regions: a grey fill so they read as "another plugin
+           could go here" rather than blending into the white board. */
+        .preview-placeholder {
+            background: #c9c6c0;
+        }
+
         /*
          * Clamp destinations to one line like the device's `data-clamp`,
          * but in CSS: the framework's JS clamp measures before the large
@@ -61,7 +67,7 @@
             <div class="view view--{{ view }}">
                 {% if compact %}{% include "compact.html" %}{% else %}{% include "full.html" %}{% endif %}
             </div>
-            {% for _ in placeholders %}<div class="view view--{{ view }}"></div>{% endfor %}
+            {% for _ in placeholders %}<div class="view view--{{ view }} preview-placeholder"></div>{% endfor %}
         </div>
         {% else %}
         <div class="view view--{{ view }}">

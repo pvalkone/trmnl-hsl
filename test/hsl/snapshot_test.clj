@@ -67,7 +67,8 @@
   (check-snapshot "full" (render/render-full board)))
 
 (deftest compact-snapshot-test
-  (check-snapshot "compact" (render/render-compact board)))
+  (doseq [layout ["half_horizontal" "half_vertical" "quadrant"]]
+    (check-snapshot (str "compact_" layout) (render/render-compact board layout))))
 
 (deftest preview-snapshot-test
   (doseq [layout (keys render/preview-layouts)]
