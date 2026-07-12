@@ -56,9 +56,18 @@
 </head>
 <body class="environment trmnl">
     <div class="screen screen--v2">
+        {% if mashup %}
+        <div class="mashup {{ mashup }}">
+            <div class="view view--{{ view }}">
+                {% if compact %}{% include "compact.html" %}{% else %}{% include "full.html" %}{% endif %}
+            </div>
+            {% for _ in placeholders %}<div class="view view--{{ view }}"></div>{% endfor %}
+        </div>
+        {% else %}
         <div class="view view--{{ view }}">
             {% if compact %}{% include "compact.html" %}{% else %}{% include "full.html" %}{% endif %}
         </div>
+        {% endif %}
     </div>
 </body>
 </html>

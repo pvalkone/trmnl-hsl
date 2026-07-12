@@ -43,23 +43,39 @@
   (selmer/render-file "compact.html" (context board)))
 
 (def preview-layouts
-  "The device layouts a browser preview can render, in `screen`/`view` order.
-   Each maps its TRMNL `view--` modifier to the partial it embeds: `full` uses
-   the two-column board, the smaller layouts reuse the compact stand-in."
-  {"full"            "full.html"
-   "half_horizontal" "compact.html"
-   "half_vertical"   "compact.html"
-   "quadrant"        "compact.html"})
+  "The device layouts a browser preview can render. Each carries what the
+   preview shell needs: the TRMNL `view--` modifier, whether it embeds the
+   compact stand-in, and, for the sub-full layouts, the mashup wrapper plus
+   the number of empty placeholder regions that fill out the rest of the
+   screen, so the layout previews at its true on-device size the way a
+   device mashup arranges it."
+  {"full"            {:view "full"}
+   "half_horizontal" {:view "half_horizontal"
+                      :compact? true
+                      :mashup "mashup--1Tx1B"
+                      :placeholders 1}
+   "half_vertical"   {:view "half_vertical"
+                      :compact? true
+                      :mashup "mashup--1Lx1R"
+                      :placeholders 1}
+   "quadrant"        {:view "quadrant"
+                      :compact? true
+                      :mashup "mashup--2x2"
+                      :placeholders 3}})
 
 (defn render-preview
   "A standalone HTML page wrapping `board` in the TRMNL design framework (its CSS
-   and a `screen`/`view` shell) for `layout`, so /preview renders in a browser the
-   way the plugin renders on the device."
+   and a `screen`/`view` shell) for `layout`. Sub-full layouts render inside a
+   mashup with placeholder regions, so /preview shows the layout at its true
+   on-device size instead of a bare, full-width box."
   [board layout]
-  (selmer/render-file "preview.html"
-                      (assoc (context board)
-                             :view layout
-                             :compact (= (preview-layouts layout) "compact.html"))))
+  (let [{:keys [view compact? mashup placeholders]} (preview-layouts layout)]
+    (selmer/render-file "preview.html"
+                        (assoc (context board)
+                               :view view
+                               :compact compact?
+                               :mashup mashup
+                               :placeholders (range (or placeholders 0))))))
 
 (defn render-all
   "The flat JSON payload TRMNL consumes: one entry per layout. The half/quadrant
