@@ -1,10 +1,10 @@
 {% comment %}
-Compact single-column stand-in for the half_horizontal/half_vertical/quadrant
-layouts.
+Compact stand-in for the half_horizontal/half_vertical/quadrant layouts.
 
-The board is designed for full-view (TRMNL X, 1872×1404); this just keeps the
-smaller layout keys populated with the next departures from the left column
-rather than rendering blank.
+The board is designed for full-view (TRMNL X, 1872×1404); this keeps the smaller
+layout keys populated rather than rendering blank. `cols` is the list of columns
+to show: just the left column for the narrow layouts, and both columns side by
+side for the wide half_horizontal. Each column is a list of stops.
 {% endcomment %}
 <style>
     .heading-row { display: flex; align-items: center; gap: 6px; }
@@ -15,29 +15,35 @@ rather than rendering blank.
     .view--quadrant, .view--half_horizontal { --table-tbody-height: 34px; }
 </style>
 <div class="layout">
-    <table class="table">
-        <tbody>
-        {% for stop in left.stops %}
-        <tr>
-            <td colspan="3"><div class="heading-row">{% if stop.icon %}<img class="image" style="height: 18px;" src="{{ stop.icon }}"/>{% endif %}<span class="title title--small">{{ stop.name }}</span></div></td>
-        </tr>
-        {% if column_headers %}
-        <tr>
-            <td><span class="title title--small">Linja</span></td>
-            <td><span class="title title--small">Määränpää</span></td>
-            <td><span class="title title--small text-right">Aika</span></td>
-        </tr>
-        {% endif %}
-        {% for dep in stop.deps %}
-        <tr>
-            <td><span class="label label--small">{{ dep.line }}</span></td>
-            <td><span class="label label--small">{{ dep.dest }}{% if dep.metro %} (M){% endif %}</span></td>
-            <td><span class="label label--small text-right">{% if dep.rt %}~{% endif %}{{ dep.hhmm }}</span></td>
-        </tr>
+    <div class="columns">
+        {% for col in cols %}
+        <div class="column">
+            <table class="table">
+                <tbody>
+                {% for stop in col %}
+                <tr>
+                    <td colspan="3"><div class="heading-row">{% if stop.icon %}<img class="image" style="height: 18px;" src="{{ stop.icon }}"/>{% endif %}<span class="title title--small">{{ stop.name }}</span></div></td>
+                </tr>
+                {% if column_headers %}
+                <tr>
+                    <td><span class="title title--small">Linja</span></td>
+                    <td><span class="title title--small">Määränpää</span></td>
+                    <td><span class="title title--small text-right">Aika</span></td>
+                </tr>
+                {% endif %}
+                {% for dep in stop.deps %}
+                <tr>
+                    <td><span class="label label--small">{{ dep.line }}</span></td>
+                    <td><span class="label label--small">{{ dep.dest }}{% if dep.metro %} (M){% endif %}</span></td>
+                    <td><span class="label label--small text-right">{% if dep.rt %}~{% endif %}{{ dep.hhmm }}</span></td>
+                </tr>
+                {% endfor %}
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
         {% endfor %}
-        {% endfor %}
-        </tbody>
-    </table>
+    </div>
 </div>
 
 <div class="title_bar">
