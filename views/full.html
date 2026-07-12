@@ -1,13 +1,12 @@
-<style>.heading-row { display: flex; align-items: center; gap: 10px; }</style>
-<div class="layout" style="padding: 8px 24px 24px 24px;">
+<div class="layout px--6 pt--2 pb--6">
     <div class="columns">
 
-        <div class="column" style="margin-right: 20px;">
+        <div class="column mr--5">
             <table class="table">
                 <tbody>
                 {% for stop in left.stops %}
                 <tr>
-                    <td colspan="3"><div class="heading-row">{% if stop.icon %}<img class="image" style="height: 26px;" src="{{ stop.icon }}"/>{% endif %}<span class="title">{{ stop.name }}</span></div></td>
+                    <td colspan="3"><div class="flex flex--center-y gap--small">{% if stop.icon %}<img class="image h--[26px]" src="{{ stop.icon }}"/>{% endif %}<span class="title">{{ stop.name }}</span></div></td>
                 </tr>
                 <tr>
                     <td><span class="title title--small">Linja</span></td>
@@ -26,12 +25,12 @@
             </table>
         </div>
 
-        <div class="column" style="margin-left: 20px;">
+        <div class="column ml--5">
             <table class="table">
                 <tbody>
                 {% for stop in right.stops %}
                 <tr>
-                    <td colspan="3"><div class="heading-row">{% if stop.icon %}<img class="image" style="height: 26px;" src="{{ stop.icon }}"/>{% endif %}<span class="title">{{ stop.name }}</span></div></td>
+                    <td colspan="3"><div class="flex flex--center-y gap--small">{% if stop.icon %}<img class="image h--[26px]" src="{{ stop.icon }}"/>{% endif %}<span class="title">{{ stop.name }}</span></div></td>
                 </tr>
                 <tr>
                     <td><span class="title title--small">Linja</span></td>
@@ -48,16 +47,18 @@
                 {% endfor %}
                 {% if alerts %}
                 <tr>
-                    <td colspan="3"><div class="heading-row"><img class="image" style="height: 26px;" src="{{ alerts_icon }}"/><span class="title">Häiriötiedotteet</span></div></td>
+                    <td colspan="3"><div class="flex flex--center-y gap--small"><img class="image h--[26px]" src="{{ alerts_icon }}"/><span class="title">Häiriötiedotteet</span></div></td>
                 </tr>
                 <tr>
-                    <td colspan="3" style="padding-top: 12px;">
-                        {% for a in alerts %}
-                        <div class="label label--small" style="display: block; margin-bottom: 8px;">{{ a }}</div>
-                        {% endfor %}
-                        {% if alerts_overflow %}
-                        <div class="label label--small" style="display: block;">{{ alerts_overflow }}</div>
-                        {% endif %}
+                    <td colspan="3" class="pt--3">
+                        <div class="flex flex--col flex--left gap--small">
+                            {% for a in alerts %}
+                            <span class="label label--small">{{ a }}</span>
+                            {% endfor %}
+                            {% if alerts_overflow %}
+                            <span class="label label--small">{{ alerts_overflow }}</span>
+                            {% endif %}
+                        </div>
                     </td>
                 </tr>
                 {% endif %}
@@ -71,5 +72,5 @@
 <div class="title_bar">
     <img class="image" src="https://trmnl.com/images/plugins/trmnl--render.svg"/>
     <span class="title">HSL — {{ title }}</span>
-    <span class="instance" style="position: absolute; right: 24px;">{{ clock }} {{ date }}</span>
+    <span class="instance">{{ clock }} {{ date }}</span>
 </div>

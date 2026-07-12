@@ -5,31 +5,18 @@ The board is designed for full-view (TRMNL X, 1872×1404); this keeps the smalle
 layout keys populated rather than rendering blank. `cols` is the list of columns
 to show: just the left column for the narrow layouts, and both columns side by
 side for the wide half_horizontal. Each column is a list of stops.
+`layout--top` fills the cell from the top (the framework otherwise centres the
+content); `table--small` tightens the rows so more departures fit.
 {% endcomment %}
-<style>
-    .heading-row { display: flex; align-items: center; gap: 6px; }
-    .alerts-badge { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: inline-flex; align-items: center; gap: 6px; }
-    .alerts-badge img { height: 18px; }
-    /* The framework centres .layout content, which floats the departures in the
-       middle with whitespace above and below. Top-align them and drop the
-       vertical padding so they fill the cell from the top; the short layouts
-       keep a few px up top so the first heading isn't flush to the edge. */
-    .view .layout { align-items: flex-start; padding-top: 0; padding-bottom: 0; }
-    .view--quadrant .layout, .view--half_horizontal .layout { padding-top: 6px; }
-    /* Tighten the rows so the departures fit their cell. */
-    .view--quadrant { --table-tbody-height: 32px; }
-    .view--half_horizontal { --table-tbody-height: 34px; }
-    .view--half_vertical { --table-tbody-height: 44px; }
-</style>
-<div class="layout">
+<div class="layout layout--top pt--2 pb--0">
     <div class="columns">
         {% for col in cols %}
         <div class="column">
-            <table class="table">
+            <table class="table table--small">
                 <tbody>
                 {% for stop in col %}
                 <tr>
-                    <td colspan="3"><div class="heading-row">{% if stop.icon %}<img class="image" style="height: 18px;" src="{{ stop.icon }}"/>{% endif %}<span class="title title--small">{{ stop.name }}</span></div></td>
+                    <td colspan="3"><div class="flex flex--center-y gap--small">{% if stop.icon %}<img class="image h--[18px]" src="{{ stop.icon }}"/>{% endif %}<span class="title title--small">{{ stop.name }}</span></div></td>
                 </tr>
                 {% if column_headers %}
                 <tr>
@@ -56,6 +43,6 @@ side for the wide half_horizontal. Each column is a list of stops.
 <div class="title_bar">
     <img class="image" src="https://trmnl.com/images/plugins/trmnl--render.svg"/>
     <span class="title">HSL — {{ title }}</span>
-    {% if alerts %}<span class="title alerts-badge"><img class="image" src="{{ alerts_icon }}"/>{% if alerts_badge_short %}{{ alerts_count }}{% else %}{{ alerts_label }}{% endif %}</span>{% endif %}
-    <span class="instance" style="position: absolute; right: 24px;">{{ clock }} {{ date }}</span>
+    {% if alerts %}<span class="label label--small gap--small no-shrink"><img class="image h--[18px]" src="{{ alerts_icon }}"/>{% if alerts_badge_short %}{{ alerts_count }}{% else %}{{ alerts_label }}{% endif %}</span>{% endif %}
+    <span class="instance">{{ clock }} {{ date }}</span>
 </div>

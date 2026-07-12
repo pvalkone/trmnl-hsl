@@ -40,12 +40,14 @@
 
 (def compact-rows
   "Max departure rows the compact stand-in shows per device layout, so its
-   content fits the layout's cell instead of overflowing. `:left`/`:right` are
-   the per-column caps; only the wide half_horizontal shows a `:right` column.
-   The left column caps lower where it carries more stop headings."
-  {"half_horizontal" {:left 6 :right 8}
-   "half_vertical"   {:left 12}
-   "quadrant"        {:left 8}})
+   content fits the layout's cell instead of overflowing. `:left`/`:right` cap
+   the board's two columns shown side by side (half_horizontal); `:all` caps
+   every stop stacked in one tall column (half_vertical). Each cap splits evenly
+   across its column's stops."
+  {"half_horizontal" {:left 8
+                      :right 9}
+   "half_vertical" {:all 15}
+   "quadrant" {:left 8}})
 
 (defn- narrow-bar?
   "The half-width layouts, whose title bar can't fit the full alert label."
@@ -61,20 +63,28 @@
             (update stop :deps #(vec (take per-stop %))))
           stops)))
 
-(defn- compact-context
-  "Template context for the compact stand-in in `layout`: the columns it renders,
-   each capped to the rows that fit with a short-badge flag and possible column
-   headers."
+(defn- compact-cols
+  "Capped columns for the compact stand-in in `layout`: half_horizontal keeps the
+   board's two columns side by side, half_vertical stacks every stop in one tall
+   column and quadrant shows the left column only."
   [board layout]
   (let [rows (compact-rows layout)
-        left (cap-stops (get-in board [:left :stops]) (:left rows))
-        cols (if (:right rows)
-               [left (cap-stops (get-in board [:right :stops]) (:right rows))]
-               [left])]
-    (assoc (context board)
-           :cols cols
-           :alerts_badge_short (narrow-bar? layout)
-           :column_headers (= layout "half_vertical"))))
+        left (get-in board [:left :stops])
+        right (get-in board [:right :stops])]
+    (cond
+      (:all rows) [(cap-stops (into (vec left) right) (:all rows))]
+      (:right rows) [(cap-stops left (:left rows)) (cap-stops right (:right rows))]
+      :else [(cap-stops left (:left rows))])))
+
+(defn- compact-context
+  "Template context for the compact stand-in in `layout`: the columns it renders,
+   each capped to the rows that fit, with a short-badge flag and possible column
+   headers."
+  [board layout]
+  (assoc (context board)
+         :cols (compact-cols board layout)
+         :alerts_badge_short (narrow-bar? layout)
+         :column_headers (= layout "half_vertical")))
 
 (defn render-compact
   "Single-column markup for `layout` (half_horizontal/half_vertical/quadrant),
