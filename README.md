@@ -193,10 +193,10 @@ To find a stop ID, search the stop on the
 ### Templates
 
 The HTML lives in [`views/full.html`](views/full.html) (the main board) and
-[`views/compact.html`](views/compact.html) (a single-column stand-in used for the
+[`views/compact.html`](views/compact.html) (a compact stand-in used for the
 smaller half/quadrant layouts). They're [Selmer](https://github.com/yogthos/Selmer)
 templates and use TRMNL's [design framework](https://trmnl.com/framework) classes
-(`.layout`, `.columns`, `.table`, `.title`, `.label` and `.title_bar`).
+(`.layout`, `.columns`, `.table`, `.title`, `.label`, `.title_bar` etc.).
 
 On the device TRMNL wraps this markup in its `screen`/`view` shell and supplies
 the framework CSS. [`views/preview.html`](views/preview.html) recreates that shell
