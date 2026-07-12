@@ -87,7 +87,7 @@
          :column_headers (= layout "half_vertical")))
 
 (defn render-compact
-  "Single-column markup for `layout` (half_horizontal/half_vertical/quadrant),
+  "Compact markup for `layout` (half_horizontal/half_vertical/quadrant),
    trimmed to the rows that fit its cell."
   [board layout]
   (selmer/render-file "compact.html" (compact-context board layout)))
