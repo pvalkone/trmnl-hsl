@@ -10,7 +10,7 @@ quadrant. Each column is a list of stops.
 content); `table--small` tightens the rows so more departures fit.
 {% endcomment %}
 <div class="layout layout--top pt--2 pb--0">
-    <div class="columns">
+    <div class="columns gap--xlarge">
         {% for col in cols %}
         <div class="column">
             <table class="table table--small">
@@ -23,14 +23,14 @@ content); `table--small` tightens the rows so more departures fit.
                 <tr>
                     <td><span class="title title--small">Linja</span></td>
                     <td><span class="title title--small">Määränpää</span></td>
-                    <td><span class="title title--small text-right">Aika</span></td>
+                    <td class="text--right"><span class="title title--small">Aika</span></td>
                 </tr>
                 {% endif %}
                 {% for dep in stop.deps %}
                 <tr>
                     <td><span class="label label--small">{{ dep.line }}</span></td>
                     <td><span class="label label--small">{{ dep.dest }}{% if dep.metro %} (M){% endif %}</span></td>
-                    <td><span class="label label--small text-right">{% if dep.rt %}~{% endif %}{{ dep.hhmm }}</span></td>
+                    <td class="text--right"><span class="label label--small">{% if dep.rt %}~{% endif %}{{ dep.hhmm }}</span></td>
                 </tr>
                 {% endfor %}
                 {% endfor %}
