@@ -13,6 +13,11 @@
       (str "+" n " muu häiriötiedote")
       (str "+" n " muuta häiriötiedotetta"))))
 
+(defn alerts-label
+  "A alert count summary for the compact layouts' indicator."
+  [n]
+  (str n (if (= n 1) " häiriötiedote" " häiriötiedotetta")))
+
 (defn- context
   "Template context: the board map plus alerts capped at `max-alerts`, with the
    overflow rendered as a ready-to-print `alerts_overflow` string."
@@ -24,6 +29,7 @@
            ;; truthy, so `{% if alerts %}` would otherwise show the heading
            :alerts (not-empty (vec (take max-alerts alerts)))
            :alerts_overflow (overflow-label extra)
+           :alerts_label (alerts-label (count alerts))
            :alerts_icon icons/alerts-icon)))
 
 (defn render-full
