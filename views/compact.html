@@ -3,8 +3,9 @@ Compact stand-in for the half_horizontal/half_vertical/quadrant layouts.
 
 The board is designed for full-view (TRMNL X, 1872×1404); this keeps the smaller
 layout keys populated rather than rendering blank. `cols` is the list of columns
-to show: just the left column for the narrow layouts, and both columns side by
-side for the wide half_horizontal. Each column is a list of stops.
+to show: both of the board's columns side by side for the wide half_horizontal,
+every stop stacked in one column for half_vertical, and the left column only for
+quadrant. Each column is a list of stops.
 `layout--top` fills the cell from the top (the framework otherwise centres the
 content); `table--small` tightens the rows so more departures fit.
 {% endcomment %}
