@@ -65,9 +65,13 @@ Then:
 curl -s localhost:4001/health                               # Lists all configured boards
 curl -s localhost:4001/api/trmnl/kotisaarenkatu | jq 'keys' # Returns the four markup keys
 open http://localhost:4001/preview/kotisaarenkatu           # Eyeball the full board in a browser
+open http://localhost:4001/preview/kotisaarenkatu/quadrant  # ...or a specific device layout
 ```
 
 `kotisaarenkatu` is the board slug (a key in `boards`, see below).
+`/preview/<slug>` renders the full layout; `/preview/<slug>/<layout>` renders a
+specific one, where `<layout>` is `full`, `half_horizontal`, `half_vertical` or
+`quadrant`, the same four layouts TRMNL requests as markup fields.
 
 ## Tests and checks
 
@@ -191,9 +195,11 @@ templates and use TRMNL's [design framework](https://trmnl.com/framework) classe
 
 On the device TRMNL wraps this markup in its `screen`/`view` shell and supplies
 the framework CSS. [`views/preview.html`](views/preview.html) recreates that shell
-for the browser: it embeds `full.html`, loads the framework stylesheet and picks
-the high-density `screen--v2` profile, so [`/preview/<slug>`](#quick-start-local)
-renders the way the plugin looks on the device instead of as bare, unstyled markup.
+for the browser: it embeds the layout's partial (`full.html`, or `compact.html`
+for the smaller layouts), loads the framework stylesheet and picks the
+high-density `screen--v2` profile, then applies the requested `view--<layout>`
+class, so [`/preview/<slug>/<layout>`](#quick-start-local) renders the way the
+plugin looks on the device instead of as bare, unstyled markup.
 
 ## TRMNL plugin setup
 

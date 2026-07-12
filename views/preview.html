@@ -42,7 +42,7 @@
          * clamp (text shows in full until the row would overflow) with no
          * arbitrary width.
          */
-        .view--full .table {
+        .view .table {
             width: 100%;
         }
 
@@ -56,8 +56,8 @@
 </head>
 <body class="environment trmnl">
     <div class="screen screen--v2">
-        <div class="view view--full">
-            {% include "full.html" %}
+        <div class="view view--{{ view }}">
+            {% if compact %}{% include "compact.html" %}{% else %}{% include "full.html" %}{% endif %}
         </div>
     </div>
 </body>

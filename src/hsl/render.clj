@@ -31,17 +31,29 @@
   [board]
   (selmer/render-file "full.html" (context board)))
 
-(defn render-preview
-  "A standalone HTML page wrapping the full board in the TRMNL design framework
-   (its CSS and a `screen`/`view` shell), so /preview renders in a browser the
-   way the plugin renders on the device."
-  [board]
-  (selmer/render-file "preview.html" (context board)))
-
 (defn render-compact
   "Single-column markup reused for the half and quadrant layouts."
   [board]
   (selmer/render-file "compact.html" (context board)))
+
+(def preview-layouts
+  "The device layouts a browser preview can render, in `screen`/`view` order.
+   Each maps its TRMNL `view--` modifier to the partial it embeds: `full` uses
+   the two-column board, the smaller layouts reuse the compact stand-in."
+  {"full"            "full.html"
+   "half_horizontal" "compact.html"
+   "half_vertical"   "compact.html"
+   "quadrant"        "compact.html"})
+
+(defn render-preview
+  "A standalone HTML page wrapping `board` in the TRMNL design framework (its CSS
+   and a `screen`/`view` shell) for `layout`, so /preview renders in a browser the
+   way the plugin renders on the device."
+  [board layout]
+  (selmer/render-file "preview.html"
+                      (assoc (context board)
+                             :view layout
+                             :compact (= (preview-layouts layout) "compact.html"))))
 
 (defn render-all
   "The flat JSON payload TRMNL consumes: one entry per layout. The half/quadrant

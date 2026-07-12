@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>HSL — Testikatu</title>
+    <link rel="stylesheet" href="https://trmnl.com/css/3.1.2/plugins.css">
+    <style>
+        /*
+         * Development-only chrome: centre the e-ink screen on a neutral
+         * backdrop so /preview reads as the device, not a bare fragment.
+         * `safe` centring + scroll keeps the fixed-size screen reachable
+         * in a browser window narrower than it, instead of clipping its
+         * edges.
+         */
+        html, body {
+            margin: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            display: grid;
+            align-items: safe center;
+            justify-items: safe center;
+            padding: 32px;
+            box-sizing: border-box;
+            overflow: auto;
+            background: #e7e5e1;
+        }
+
+        .screen {
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.18);
+        }
+
+        /*
+         * Clamp destinations to one line like the device's `data-clamp`,
+         * but in CSS: the framework's JS clamp measures before the large
+         * stylesheet and webfonts load and mis-truncates text that fits.
+         *
+         * The screen is a fixed width, so a full-width table is bounded to its
+         * column; hiding overflow then reproduces the device's column-width
+         * clamp (text shows in full until the row would overflow) with no
+         * arbitrary width.
+         */
+        .view .table {
+            width: 100%;
+        }
+
+        .view--full td .label[data-clamp] {
+            display: block;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+    </style>
+</head>
+<body class="environment trmnl">
+    <div class="screen screen--v2">
+        <div class="view view--quadrant">
+            
+<style>.heading-row { display: flex; align-items: center; gap: 6px; }</style>
+<div class="layout">
+    <table class="table">
+        <tbody>
+        
+        <tr>
+            <td colspan="2"><div class="heading-row"><img class="image" style="height: 18px;" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAtOTYwIDk2MCA5NjAiPjxwYXRoIGQ9Ik0yNDktMTIwcS0xMyAwLTIzLTcuNVQyMTYtMTQ3di04NHEtMjktMTYtNDIuNS00NlQxNjAtMzQxdi0zOTdxMC03NCA3Ni41LTEwOFQ0ODEtODgwcTE2NiAwIDI0Mi41IDM0VDgwMC03Mzh2Mzk3cTAgMzQtMTMuNSA2NFQ3NDQtMjMxdjg0cTAgMTItMTAgMTkuNXQtMjMgNy41aC0xOXEtMTQgMC0yNC03LjVUNjU4LTE0N3YtNTVIMzAydjU1cTAgMTItMTAgMTkuNXQtMjQgNy41aC0xOVptMjMyLTY0NGgyNTktNTIwIDI2MVptMTc3IDI5M0gyMjBoNTIwLTgyWm0tNDM4LTYwaDUyMHYtMTczSDIyMHYxNzNabTE0NSAyMDNxMTYtMTYgMTYtMzl0LTE2LTM5cS0xNi0xNi0zOS0xNnQtMzkgMTZxLTE2IDE2LTE2IDM5dDE2IDM5cTE2IDE2IDM5IDE2dDM5LTE2Wm0zMDggMHExNi0xNiAxNi0zOXQtMTYtMzlxLTE2LTE2LTM5LTE2dC0zOSAxNnEtMTYgMTYtMTYgMzl0MTYgMzlxMTYgMTYgMzkgMTZ0MzktMTZaTTIyMC03NjRoNTIwcS0yNC0yNi05Mi00MXQtMTY3LTE1cS0xMTggMC0xODEgMTMuNVQyMjAtNzY0Wm04MiA1MDJoMzU2cTM1IDAgNTguNS0yN3QyMy41LTYydi0xMjBIMjIwdjEyMHEwIDM1IDIzLjUgNjJ0NTguNSAyN1oiLz48L3N2Zz4="/><span class="title title--small">Kotisaarenkatu</span></div></td>
+        </tr>
+        
+        <tr>
+            <td><span class="label label--small">55 Rautatientori</span>
+            </td>
+            <td><span class="label label--small text-right">~17:05</span></td>
+        </tr>
+        
+        <tr>
+            <td><span class="label label--small">55 Rautatientori</span>
+            </td>
+            <td><span class="label label--small text-right">17:15</span></td>
+        </tr>
+        
+        <tr>
+            <td><span class="label label--small">506 Myllypuro (M)</span>
+            </td>
+            <td><span class="label label--small text-right">17:20</span></td>
+        </tr>
+        
+        
+        <tr>
+            <td colspan="2"><div class="heading-row"><img class="image" style="height: 18px;" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAtOTYwIDk2MCA5NjAiPjxwYXRoIGQ9Ik0xNjAtMjYwdi0zOTRxMC05MCA3MC41LTExOVQ0NDktODA0bDMyLTY2SDI4MHYtNTBoNDAwdjUwSDU0MWwtMzAgNjZxMTI2IDIgMjA3LjUgMzAuNVQ4MDAtNjU0djM5NHEwIDU5LTQwLjUgOTkuNVQ2NjAtMTIwbDYwIDYwdjIwaC03MGwtODAtODBIMzkwbC04MCA4MGgtNzB2LTIwbDYwLTYwcS01OSAwLTk5LjUtNDAuNVQxNjAtMjYwWm01MDUtMTU0SDIyMGg1MTktNzRaTTUyMi0yNjBxMTYtMTYgMTYtMzl0LTE2LTM5cS0xNi0xNi0zOS0xNnQtMzkgMTZxLTE2IDE2LTE2IDM5dDE2IDM5cTE2IDE2IDM5IDE2dDM5LTE2Wm0tNDEtNDI5aDI1MS01MDkgMjU4Wk0yMjAtNDc0aDUxOXYtMTU1SDIyMHYxNTVabTc0IDI5MGgzNzFxMzIgMCA1My0yMnQyMS01NHYtMTU0SDIyMHYxNTRxMCAzMiAyMS41IDU0dDUyLjUgMjJabTE4Ny01NjBxLTEyMyAwLTE4NS41IDE0LjVUMjIzLTY4OWg1MDlxLTEwLTIwLTcwLjUtMzcuNVQ0ODEtNzQ0WiIvPjwvc3ZnPg=="/><span class="title title--small">Intiankatu</span></div></td>
+        </tr>
+        
+        <tr>
+            <td><span class="label label--small">57 Munkkivuori</span>
+            </td>
+            <td><span class="label label--small text-right">17:08</span></td>
+        </tr>
+        
+        
+        </tbody>
+    </table>
+</div>
+
+<div class="title_bar">
+    <img class="image" src="https://trmnl.com/images/plugins/trmnl--render.svg"/>
+    <span class="title">HSL — Testikatu</span>
+    <span class="instance" style="position: absolute; right: 24px;">17:05 6.7.</span>
+</div>
+
+        </div>
+    </div>
+</body>
+</html>
