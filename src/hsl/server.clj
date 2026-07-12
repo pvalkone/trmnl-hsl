@@ -181,7 +181,14 @@
         (log-error! "Request error:" (ex-message e))
         (json-response 500 {:error "internal server error"})))))
 
-(defn -main [& _]
+(defn start!
+  "Build the shared state, start the HTTP server and warm the caches. Returns
+   `{:state state :stop stop-fn}`, where `stop-fn` shuts the server down.
+
+   Requests dispatch through the `handler` var rather than a captured handler
+   value, so re-requiring this namespace swaps in new request-handling code on
+   the already-running server without a restart."
+  []
   (let [dotenv (load-dotenv! ".env")
         api-key (validate-api-key (env dotenv "DIGITRANSIT_KEY" nil))
         port (Long/parseLong (env dotenv "PORT" "4001"))
@@ -191,13 +198,17 @@
                                          :config cfg}]))
                :api-key api-key
                :ttl-ms ttl-ms}
-        stop-server (http/run-server (handler state) {:port port})]
-    (.addShutdownHook (Runtime/getRuntime)
-                      (Thread. ^Runnable (fn []
-                                           (log! "Server shutting down")
-                                           (stop-server))))
+        stop-server (http/run-server (fn [req] ((handler state) req)) {:port port})]
     (log! (str "Server started on port " port " (TTL " ttl-ms "ms). Boards: "
                (str/join ", " (keys config/boards))))
     (warm-cache! state)
     (log! "Startup complete")
+    {:state state :stop stop-server}))
+
+(defn -main [& _]
+  (let [{:keys [stop]} (start!)]
+    (.addShutdownHook (Runtime/getRuntime)
+                      (Thread. ^Runnable (fn []
+                                           (log! "Server shutting down")
+                                           (stop))))
     @(promise)))
