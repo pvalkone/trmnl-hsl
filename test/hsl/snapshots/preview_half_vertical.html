@@ -66,30 +66,15 @@
         <div class="mashup mashup--1Lx1R">
             <div class="view view--half_vertical">
                 
-<style>
-    .heading-row { display: flex; align-items: center; gap: 6px; }
-    .alerts-badge { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: inline-flex; align-items: center; gap: 6px; }
-    .alerts-badge img { height: 18px; }
-    /* The framework centres .layout content, which floats the departures in the
-       middle with whitespace above and below. Top-align them and drop the
-       vertical padding so they fill the cell from the top; the short layouts
-       keep a few px up top so the first heading isn't flush to the edge. */
-    .view .layout { align-items: flex-start; padding-top: 0; padding-bottom: 0; }
-    .view--quadrant .layout, .view--half_horizontal .layout { padding-top: 6px; }
-    /* Tighten the rows so the departures fit their cell. */
-    .view--quadrant { --table-tbody-height: 32px; }
-    .view--half_horizontal { --table-tbody-height: 34px; }
-    .view--half_vertical { --table-tbody-height: 44px; }
-</style>
-<div class="layout">
+<div class="layout layout--top pt--2 pb--0">
     <div class="columns">
         
         <div class="column">
-            <table class="table">
+            <table class="table table--small">
                 <tbody>
                 
                 <tr>
-                    <td colspan="3"><div class="heading-row"><img class="image" style="height: 18px;" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAtOTYwIDk2MCA5NjAiPjxwYXRoIGQ9Ik0yNDktMTIwcS0xMyAwLTIzLTcuNVQyMTYtMTQ3di04NHEtMjktMTYtNDIuNS00NlQxNjAtMzQxdi0zOTdxMC03NCA3Ni41LTEwOFQ0ODEtODgwcTE2NiAwIDI0Mi41IDM0VDgwMC03Mzh2Mzk3cTAgMzQtMTMuNSA2NFQ3NDQtMjMxdjg0cTAgMTItMTAgMTkuNXQtMjMgNy41aC0xOXEtMTQgMC0yNC03LjVUNjU4LTE0N3YtNTVIMzAydjU1cTAgMTItMTAgMTkuNXQtMjQgNy41aC0xOVptMjMyLTY0NGgyNTktNTIwIDI2MVptMTc3IDI5M0gyMjBoNTIwLTgyWm0tNDM4LTYwaDUyMHYtMTczSDIyMHYxNzNabTE0NSAyMDNxMTYtMTYgMTYtMzl0LTE2LTM5cS0xNi0xNi0zOS0xNnQtMzkgMTZxLTE2IDE2LTE2IDM5dDE2IDM5cTE2IDE2IDM5IDE2dDM5LTE2Wm0zMDggMHExNi0xNiAxNi0zOXQtMTYtMzlxLTE2LTE2LTM5LTE2dC0zOSAxNnEtMTYgMTYtMTYgMzl0MTYgMzlxMTYgMTYgMzkgMTZ0MzktMTZaTTIyMC03NjRoNTIwcS0yNC0yNi05Mi00MXQtMTY3LTE1cS0xMTggMC0xODEgMTMuNVQyMjAtNzY0Wm04MiA1MDJoMzU2cTM1IDAgNTguNS0yN3QyMy41LTYydi0xMjBIMjIwdjEyMHEwIDM1IDIzLjUgNjJ0NTguNSAyN1oiLz48L3N2Zz4="/><span class="title title--small">Kotisaarenkatu</span></div></td>
+                    <td colspan="3"><div class="flex flex--center-y gap--small"><img class="image h--[18px]" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAtOTYwIDk2MCA5NjAiPjxwYXRoIGQ9Ik0yNDktMTIwcS0xMyAwLTIzLTcuNVQyMTYtMTQ3di04NHEtMjktMTYtNDIuNS00NlQxNjAtMzQxdi0zOTdxMC03NCA3Ni41LTEwOFQ0ODEtODgwcTE2NiAwIDI0Mi41IDM0VDgwMC03Mzh2Mzk3cTAgMzQtMTMuNSA2NFQ3NDQtMjMxdjg0cTAgMTItMTAgMTkuNXQtMjMgNy41aC0xOXEtMTQgMC0yNC03LjVUNjU4LTE0N3YtNTVIMzAydjU1cTAgMTItMTAgMTkuNXQtMjQgNy41aC0xOVptMjMyLTY0NGgyNTktNTIwIDI2MVptMTc3IDI5M0gyMjBoNTIwLTgyWm0tNDM4LTYwaDUyMHYtMTczSDIyMHYxNzNabTE0NSAyMDNxMTYtMTYgMTYtMzl0LTE2LTM5cS0xNi0xNi0zOS0xNnQtMzkgMTZxLTE2IDE2LTE2IDM5dDE2IDM5cTE2IDE2IDM5IDE2dDM5LTE2Wm0zMDggMHExNi0xNiAxNi0zOXQtMTYtMzlxLTE2LTE2LTM5LTE2dC0zOSAxNnEtMTYgMTYtMTYgMzl0MTYgMzlxMTYgMTYgMzkgMTZ0MzktMTZaTTIyMC03NjRoNTIwcS0yNC0yNi05Mi00MXQtMTY3LTE1cS0xMTggMC0xODEgMTMuNVQyMjAtNzY0Wm04MiA1MDJoMzU2cTM1IDAgNTguNS0yN3QyMy41LTYydi0xMjBIMjIwdjEyMHEwIDM1IDIzLjUgNjJ0NTguNSAyN1oiLz48L3N2Zz4="/><span class="title title--small">Kotisaarenkatu</span></div></td>
                 </tr>
                 
                 <tr>
@@ -119,7 +104,7 @@
                 
                 
                 <tr>
-                    <td colspan="3"><div class="heading-row"><img class="image" style="height: 18px;" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAtOTYwIDk2MCA5NjAiPjxwYXRoIGQ9Ik0xNjAtMjYwdi0zOTRxMC05MCA3MC41LTExOVQ0NDktODA0bDMyLTY2SDI4MHYtNTBoNDAwdjUwSDU0MWwtMzAgNjZxMTI2IDIgMjA3LjUgMzAuNVQ4MDAtNjU0djM5NHEwIDU5LTQwLjUgOTkuNVQ2NjAtMTIwbDYwIDYwdjIwaC03MGwtODAtODBIMzkwbC04MCA4MGgtNzB2LTIwbDYwLTYwcS01OSAwLTk5LjUtNDAuNVQxNjAtMjYwWm01MDUtMTU0SDIyMGg1MTktNzRaTTUyMi0yNjBxMTYtMTYgMTYtMzl0LTE2LTM5cS0xNi0xNi0zOS0xNnQtMzkgMTZxLTE2IDE2LTE2IDM5dDE2IDM5cTE2IDE2IDM5IDE2dDM5LTE2Wm0tNDEtNDI5aDI1MS01MDkgMjU4Wk0yMjAtNDc0aDUxOXYtMTU1SDIyMHYxNTVabTc0IDI5MGgzNzFxMzIgMCA1My0yMnQyMS01NHYtMTU0SDIyMHYxNTRxMCAzMiAyMS41IDU0dDUyLjUgMjJabTE4Ny01NjBxLTEyMyAwLTE4NS41IDE0LjVUMjIzLTY4OWg1MDlxLTEwLTIwLTcwLjUtMzcuNVQ0ODEtNzQ0WiIvPjwvc3ZnPg=="/><span class="title title--small">Intiankatu</span></div></td>
+                    <td colspan="3"><div class="flex flex--center-y gap--small"><img class="image h--[18px]" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAtOTYwIDk2MCA5NjAiPjxwYXRoIGQ9Ik0xNjAtMjYwdi0zOTRxMC05MCA3MC41LTExOVQ0NDktODA0bDMyLTY2SDI4MHYtNTBoNDAwdjUwSDU0MWwtMzAgNjZxMTI2IDIgMjA3LjUgMzAuNVQ4MDAtNjU0djM5NHEwIDU5LTQwLjUgOTkuNVQ2NjAtMTIwbDYwIDYwdjIwaC03MGwtODAtODBIMzkwbC04MCA4MGgtNzB2LTIwbDYwLTYwcS01OSAwLTk5LjUtNDAuNVQxNjAtMjYwWm01MDUtMTU0SDIyMGg1MTktNzRaTTUyMi0yNjBxMTYtMTYgMTYtMzl0LTE2LTM5cS0xNi0xNi0zOS0xNnQtMzkgMTZxLTE2IDE2LTE2IDM5dDE2IDM5cTE2IDE2IDM5IDE2dDM5LTE2Wm0tNDEtNDI5aDI1MS01MDkgMjU4Wk0yMjAtNDc0aDUxOXYtMTU1SDIyMHYxNTVabTc0IDI5MGgzNzFxMzIgMCA1My0yMnQyMS01NHYtMTU0SDIyMHYxNTRxMCAzMiAyMS41IDU0dDUyLjUgMjJabTE4Ny01NjBxLTEyMyAwLTE4NS41IDE0LjVUMjIzLTY4OWg1MDlxLTEwLTIwLTcwLjUtMzcuNVQ0ODEtNzQ0WiIvPjwvc3ZnPg=="/><span class="title title--small">Intiankatu</span></div></td>
                 </tr>
                 
                 <tr>
@@ -136,6 +121,30 @@
                 </tr>
                 
                 
+                <tr>
+                    <td colspan="3"><div class="flex flex--center-y gap--small"><img class="image h--[18px]" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAtOTYwIDk2MCA5NjAiPjxwYXRoIGQ9Ik04MC04MHYtNTM0cTAtODIgNDIuNS0xNDRUMjQxLTg1MHE1Ni0yMSAxMTktMjUuNXQxMjAtNC41cTU3IDAgMTIwLjUgNC41VDcyMC04NTBxNzYgMzAgMTE4IDkydDQyIDE0NHY1MzRIODBabTI2Ny02MGgyNjZsLTgxLTgxSDQyOGwtODEgODFabS02Mi0yODhoMzkwdi0xNzVIMjg1djE3NVptMzYzIDExNnExMS0xMSAxMS0yOHQtMTEtMjhxLTExLTExLTI4LTExdC0yOCAxMXEtMTEgMTEtMTEgMjh0MTEgMjhxMTEgMTEgMjggMTF0MjgtMTFabS0yODAgMHExMS0xMSAxMS0yOHQtMTEtMjhxLTExLTExLTI4LTExdC0yOCAxMXEtMTEgMTEtMTEgMjh0MTEgMjhxMTEgMTEgMjggMTF0MjgtMTFaTTE0MC0xNDBoMTU5di0yMGw2MS02MXEtMzggMC03OS0yOS41VDI0MC0zNDB2LTI2M3EwLTcyIDY3LTk0LjVUNDgwLTcyMHE5MCAwIDE2NSAyMi41dDc1IDk0LjV2MjYzcTAgNTYtMzYuNSA4Ny41VDYwMC0yMjFsNjEgNjF2MjBoMTU5di00NzRxMC02Ni0zMS41LTEwOS41VDY5NS03OTNxLTQ3LTE5LTEwNC0yM3QtMTExLTRxLTU0IDAtMTEwLjUgNFQyNjYtNzkzcS02MiAyNi05NCA2OS41VDE0MC02MTR2NDc0Wm0wIDBoNjgwLTY4MFoiLz48L3N2Zz4="/><span class="title title--small">Kumpulan kampus</span></div></td>
+                </tr>
+                
+                <tr>
+                    <td><span class="title title--small">Linja</span></td>
+                    <td><span class="title title--small">Määränpää</span></td>
+                    <td><span class="title title--small text-right">Aika</span></td>
+                </tr>
+                
+                
+                <tr>
+                    <td><span class="label label--small">71</span></td>
+                    <td><span class="label label--small">Malmi</span></td>
+                    <td><span class="label label--small text-right">~17:06</span></td>
+                </tr>
+                
+                <tr>
+                    <td><span class="label label--small">78</span></td>
+                    <td><span class="label label--small">Rautatientori via Kalasatama ja Sörnäinen</span></td>
+                    <td><span class="label label--small text-right">17:12</span></td>
+                </tr>
+                
+                
                 </tbody>
             </table>
         </div>
@@ -146,8 +155,8 @@
 <div class="title_bar">
     <img class="image" src="https://trmnl.com/images/plugins/trmnl--render.svg"/>
     <span class="title">HSL — Testikatu</span>
-    <span class="title alerts-badge"><img class="image" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAtOTYwIDk2MCA5NjAiPjxwYXRoIGQ9Im00MC0xMjAgNDQwLTc2MCA0NDAgNzYwSDQwWm0xMDQtNjBoNjcyTDQ4MC03NjAgMTQ0LTE4MFptMzYxLjUtNjUuNjhxOC41LTguNjcgOC41LTIxLjUgMC0xMi44Mi04LjY4LTIxLjMyLTguNjctOC41LTIxLjUtOC41LTEyLjgyIDAtMjEuMzIgOC42OC04LjUgOC42Ny04LjUgMjEuNSAwIDEyLjgyIDguNjggMjEuMzIgOC42NyA4LjUgMjEuNSA4LjUgMTIuODIgMCAyMS4zMi04LjY4Wk00NTQtMzQ4aDYwdi0yMjRoLTYwdjIyNFptMjYtMTIyWiIvPjwvc3ZnPg=="/>3</span>
-    <span class="instance" style="position: absolute; right: 24px;">17:05 6.7.</span>
+    <span class="label label--small gap--small no-shrink"><img class="image h--[18px]" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAtOTYwIDk2MCA5NjAiPjxwYXRoIGQ9Im00MC0xMjAgNDQwLTc2MCA0NDAgNzYwSDQwWm0xMDQtNjBoNjcyTDQ4MC03NjAgMTQ0LTE4MFptMzYxLjUtNjUuNjhxOC41LTguNjcgOC41LTIxLjUgMC0xMi44Mi04LjY4LTIxLjMyLTguNjctOC41LTIxLjUtOC41LTEyLjgyIDAtMjEuMzIgOC42OC04LjUgOC42Ny04LjUgMjEuNSAwIDEyLjgyIDguNjggMjEuMzIgOC42NyA4LjUgMjEuNSA4LjUgMTIuODIgMCAyMS4zMi04LjY4Wk00NTQtMzQ4aDYwdi0yMjRoLTYwdjIyNFptMjYtMTIyWiIvPjwvc3ZnPg=="/>3</span>
+    <span class="instance">17:05 6.7.</span>
 </div>
 
             </div>

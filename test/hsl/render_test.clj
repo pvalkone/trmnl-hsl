@@ -41,11 +41,12 @@
                :alerts []}
         left-shown (fn [layout] (count (re-seq #"(?:AA|BB)\d" (render/render-compact board layout))))
         right-shown (fn [layout] (count (re-seq #"CC\d" (render/render-compact board layout))))]
-    (testing "the narrow layouts show only the left column, capped to fit"
+    (testing "quadrant shows only the left column, capped to fit"
       (is (= 8 (left-shown "quadrant")))        ; 2 stops, 4 each
-      (is (= 0 (right-shown "quadrant")))
-      (is (= 12 (left-shown "half_vertical")))  ; full height, 6 each
-      (is (= 0 (right-shown "half_vertical"))))
-    (testing "the wide half_horizontal also shows the right column"
-      (is (= 6 (left-shown "half_horizontal")))     ; 2 stops, 3 each
-      (is (= 8 (right-shown "half_horizontal")))))) ; 1 stop, 8 deps
+      (is (= 0 (right-shown "quadrant"))))
+    (testing "half_vertical stacks every stop in its one tall column"
+      (is (= 10 (left-shown "half_vertical")))  ; 2 left stops, 5 each
+      (is (= 5 (right-shown "half_vertical")))) ; right stop stacked in too, 5
+    (testing "the wide half_horizontal shows both columns side by side"
+      (is (= 8 (left-shown "half_horizontal")))     ; 2 stops, 4 each
+      (is (= 9 (right-shown "half_horizontal")))))) ; 1 stop, 9 deps
