@@ -29,6 +29,7 @@
            ;; truthy, so `{% if alerts %}` would otherwise show the heading
            :alerts (not-empty (vec (take max-alerts alerts)))
            :alerts_overflow (overflow-label extra)
+           :alerts_count (count alerts)
            :alerts_label (alerts-label (count alerts))
            :alerts_icon icons/alerts-icon)))
 
@@ -37,10 +38,43 @@
   [board]
   (selmer/render-file "full.html" (context board)))
 
+(def compact-rows
+  "Max departure rows the compact stand-in shows per device layout, so its
+   content fits the layout's cell instead of overflowing. half_vertical is
+   full-height; half_horizontal and quadrant are half-height."
+  {"half_horizontal" 8
+   "half_vertical"   12
+   "quadrant"        8})
+
+(defn- narrow-bar?
+  "The half-width layouts, whose title bar can't fit the full alert label."
+  [layout]
+  (contains? #{"half_vertical" "quadrant"} layout))
+
+(defn- cap-left-column
+  "Trim `board`'s left column to at most `n` departure rows, split evenly across
+   its stops, so the compact markup fits a short layout's cell."
+  [board n]
+  (update-in board [:left :stops]
+             (fn [stops]
+               (let [per-stop (max 1 (quot n (max 1 (count stops))))]
+                 (mapv (fn [stop]
+                         (update stop :deps #(vec (take per-stop %))))
+                       stops)))))
+
+(defn- compact-context
+  "Template context for the compact stand-in in `layout`: the board capped to the
+   rows that fit, plus a short-badge flag for the narrow title bars."
+  [board layout]
+  (assoc (context (cap-left-column board (compact-rows layout)))
+         :alerts_badge_short (narrow-bar? layout)
+         :column_headers (= layout "half_vertical")))
+
 (defn render-compact
-  "Single-column markup reused for the half and quadrant layouts."
-  [board]
-  (selmer/render-file "compact.html" (context board)))
+  "Single-column markup for `layout` (half_horizontal/half_vertical/quadrant),
+   trimmed to the rows that fit its cell."
+  [board layout]
+  (selmer/render-file "compact.html" (compact-context board layout)))
 
 (def preview-layouts
   "The device layouts a browser preview can render. Each carries what the
@@ -69,9 +103,10 @@
    mashup with placeholder regions, so /preview shows the layout at its true
    on-device size instead of a bare, full-width box."
   [board layout]
-  (let [{:keys [view compact? mashup placeholders]} (preview-layouts layout)]
+  (let [{:keys [view compact? mashup placeholders]} (preview-layouts layout)
+        base (if compact? (compact-context board layout) (context board))]
     (selmer/render-file "preview.html"
-                        (assoc (context board)
+                        (assoc base
                                :view view
                                :compact compact?
                                :mashup mashup
@@ -79,11 +114,9 @@
 
 (defn render-all
   "The flat JSON payload TRMNL consumes: one entry per layout. The half/quadrant
-   layouts reuse the compact rendering."
+   layouts reuse the compact rendering, each capped to the rows that fit it."
   [board]
-  (let [full (render-full board)
-        compact (render-compact board)]
-    {:markup full
-     :markup_half_horizontal compact
-     :markup_half_vertical compact
-     :markup_quadrant compact}))
+  {:markup (render-full board)
+   :markup_half_horizontal (render-compact board "half_horizontal")
+   :markup_half_vertical (render-compact board "half_vertical")
+   :markup_quadrant (render-compact board "quadrant")})

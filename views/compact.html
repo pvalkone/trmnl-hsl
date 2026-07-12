@@ -10,18 +10,28 @@ rather than rendering blank.
     .heading-row { display: flex; align-items: center; gap: 6px; }
     .alerts-badge { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: inline-flex; align-items: center; gap: 6px; }
     .alerts-badge img { height: 18px; }
+    /* Tighten the rows in the short (half-height) layouts so more fit; the
+       full-height half_vertical keeps the default height. */
+    .view--quadrant, .view--half_horizontal { --table-tbody-height: 34px; }
 </style>
 <div class="layout">
     <table class="table">
         <tbody>
         {% for stop in left.stops %}
         <tr>
-            <td colspan="2"><div class="heading-row">{% if stop.icon %}<img class="image" style="height: 18px;" src="{{ stop.icon }}"/>{% endif %}<span class="title title--small">{{ stop.name }}</span></div></td>
+            <td colspan="3"><div class="heading-row">{% if stop.icon %}<img class="image" style="height: 18px;" src="{{ stop.icon }}"/>{% endif %}<span class="title title--small">{{ stop.name }}</span></div></td>
         </tr>
+        {% if column_headers %}
+        <tr>
+            <td><span class="title title--small">Linja</span></td>
+            <td><span class="title title--small">Määränpää</span></td>
+            <td><span class="title title--small text-right">Aika</span></td>
+        </tr>
+        {% endif %}
         {% for dep in stop.deps %}
         <tr>
-            <td><span class="label label--small">{{ dep.line }} {{ dep.dest }}{% if dep.metro %} (M){% endif %}</span>
-            </td>
+            <td><span class="label label--small">{{ dep.line }}</span></td>
+            <td><span class="label label--small">{{ dep.dest }}{% if dep.metro %} (M){% endif %}</span></td>
             <td><span class="label label--small text-right">{% if dep.rt %}~{% endif %}{{ dep.hhmm }}</span></td>
         </tr>
         {% endfor %}
@@ -33,6 +43,6 @@ rather than rendering blank.
 <div class="title_bar">
     <img class="image" src="https://trmnl.com/images/plugins/trmnl--render.svg"/>
     <span class="title">HSL — {{ title }}</span>
-    {% if alerts %}<span class="title alerts-badge"><img class="image" src="{{ alerts_icon }}"/>{{ alerts_label }}</span>{% endif %}
+    {% if alerts %}<span class="title alerts-badge"><img class="image" src="{{ alerts_icon }}"/>{% if alerts_badge_short %}{{ alerts_count }}{% else %}{{ alerts_label }}{% endif %}</span>{% endif %}
     <span class="instance" style="position: absolute; right: 24px;">{{ clock }} {{ date }}</span>
 </div>
