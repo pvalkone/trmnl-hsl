@@ -158,13 +158,17 @@
             (json-response 200 (render/render-all (board-cached! handle)))
             (json-response 404 {:error "unknown board"}))
 
-          ;; /preview/<slug>
-          (and (= 2 (count segments)) (= "preview" (first segments)))
-          (if-let [handle (board-handle state (second segments))]
-            {:status 200
-             :headers {"Content-Type" "text/html; charset=utf-8"}
-             :body (render/render-preview (board-cached! handle))}
-            (json-response 404 {:error "unknown board"}))
+          ;; /preview/<slug> (full) or /preview/<slug>/<layout>
+          (and (<= 2 (count segments) 3) (= "preview" (first segments)))
+          (let [layout (get segments 2 "full")
+                handle (board-handle state (second segments))]
+            (cond
+              (nil? handle) (json-response 404 {:error "unknown board"})
+              (not (contains? render/preview-layouts layout))
+              (json-response 404 {:error "unknown layout"})
+              :else {:status 200
+                     :headers {"Content-Type" "text/html; charset=utf-8"}
+                     :body (render/render-preview (board-cached! handle) layout)}))
 
           ;; /health
           (= ["health"] segments)

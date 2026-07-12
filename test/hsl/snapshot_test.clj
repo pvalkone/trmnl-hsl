@@ -70,4 +70,5 @@
   (check-snapshot "compact" (render/render-compact board)))
 
 (deftest preview-snapshot-test
-  (check-snapshot "preview" (render/render-preview board)))
+  (doseq [layout (keys render/preview-layouts)]
+    (check-snapshot (str "preview_" layout) (render/render-preview board layout))))

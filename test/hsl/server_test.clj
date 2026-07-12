@@ -109,11 +109,22 @@
 (deftest preview-route-serves-html
   (let [state (state-with {"kotisaarenkatu" {:loaded true}})]
     (with-redefs [server/board-cached! (fn [_] :board)
-                  render/render-preview (fn [_] "<html>ok</html>")]
+                  render/render-preview (fn [_ layout] (str "<html>" layout "</html>"))]
+      ;; No layout segment defaults to the full layout
       (let [resp ((server/handler state) {:uri "/preview/kotisaarenkatu"})]
         (is (= 200 (:status resp)))
         (is (= "text/html; charset=utf-8" (get-in resp [:headers "Content-Type"])))
-        (is (= "<html>ok</html>" (:body resp)))))))
+        (is (= "<html>full</html>" (:body resp))))
+      ;; An explicit layout segment is passed through to the renderer
+      (let [resp ((server/handler state) {:uri "/preview/kotisaarenkatu/quadrant"})]
+        (is (= 200 (:status resp)))
+        (is (= "<html>quadrant</html>" (:body resp)))))))
+
+(deftest preview-route-unknown-layout-404
+  (let [state (state-with {"kotisaarenkatu" {:loaded true}})
+        resp ((server/handler state) {:uri "/preview/kotisaarenkatu/nope"})]
+    (is (= 404 (:status resp)))
+    (is (= "unknown layout" (:error (json/parse-string (:body resp) true))))))
 
 (deftest api-route-unknown-board-404
   (let [state (state-with {"kotisaarenkatu" {:loaded true}})
