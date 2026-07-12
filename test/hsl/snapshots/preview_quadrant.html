@@ -70,9 +70,16 @@
     .heading-row { display: flex; align-items: center; gap: 6px; }
     .alerts-badge { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: inline-flex; align-items: center; gap: 6px; }
     .alerts-badge img { height: 18px; }
-    /* Tighten the rows in the short (half-height) layouts so more fit; the
-       full-height half_vertical keeps the default height. */
-    .view--quadrant, .view--half_horizontal { --table-tbody-height: 34px; }
+    /* The framework centres .layout content, which floats the departures in the
+       middle with whitespace above and below. Top-align them and drop the
+       vertical padding so they fill the cell from the top; the short layouts
+       keep a few px up top so the first heading isn't flush to the edge. */
+    .view .layout { align-items: flex-start; padding-top: 0; padding-bottom: 0; }
+    .view--quadrant .layout, .view--half_horizontal .layout { padding-top: 6px; }
+    /* Tighten the rows so the departures fit their cell. */
+    .view--quadrant { --table-tbody-height: 32px; }
+    .view--half_horizontal { --table-tbody-height: 34px; }
+    .view--half_vertical { --table-tbody-height: 44px; }
 </style>
 <div class="layout">
     <div class="columns">

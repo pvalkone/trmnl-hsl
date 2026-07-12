@@ -47,5 +47,5 @@
       (is (= 12 (left-shown "half_vertical")))  ; full height, 6 each
       (is (= 0 (right-shown "half_vertical"))))
     (testing "the wide half_horizontal also shows the right column"
-      (is (= 8 (left-shown "half_horizontal")))   ; 2 stops, 4 each
-      (is (= 9 (right-shown "half_horizontal")))))) ; 1 stop, 9 deps
+      (is (= 6 (left-shown "half_horizontal")))     ; 2 stops, 3 each
+      (is (= 8 (right-shown "half_horizontal")))))) ; 1 stop, 8 deps
