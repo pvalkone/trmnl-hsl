@@ -1,0 +1,24 @@
+name: Build image
+
+on:
+  pull_request:
+    paths: &image-paths
+      - .dockerignore
+      - .github/workflows/build-image.yml
+      - Dockerfile
+      - bb.edn
+      - resources/**
+      - src/**
+      - views/**
+  push:
+    branches: [main]
+    paths: *image-paths
+
+jobs:
+  image:
+    name: Build Docker image
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - name: Build image
+        run: docker build .
