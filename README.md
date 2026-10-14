@@ -111,9 +111,16 @@ shellcheck run.sh deploy/freebsd/trmnl_hsl
 shfmt -i 2 -ci -sr -d run.sh deploy/freebsd/trmnl_hsl
 ```
 
-All four checks above also run as a local [prek](https://github.com/j178/prek)
+The [`Dockerfile`](Dockerfile) is linted with
+[hadolint](https://github.com/hadolint/hadolint):
+
+```sh
+hadolint Dockerfile
+```
+
+All five checks above also run as a local [prek](https://github.com/j178/prek)
 hook from [`.pre-commit-config.yaml`](.pre-commit-config.yaml). With `prek` and
-those four tools on your `PATH`, enable the hook once to run them on every
+those five tools on your `PATH`, enable the hook once to run them on every
 commit:
 
 ```sh
