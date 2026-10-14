@@ -128,6 +128,9 @@ the workflow locally with [act](https://github.com/nektos/act):
 act pull_request -P ubuntu-24.04=catthehacker/ubuntu:act-latest
 ```
 
+The Docker image is built by a separate workflow,
+[`build-image.yml`](.github/workflows/build-image.yml).
+
 ## Configuration
 
 ### Environment variables
