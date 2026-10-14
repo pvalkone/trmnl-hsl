@@ -42,7 +42,8 @@ The server hosts multiple boards, each identified by a URL slug and served at
 - A TRMNL device with the ability to add a
   [Private Plugin](https://help.trmnl.com/en/articles/9510536-private-plugins).
   The implementation has been tested on a TRMNL X (1872×1404).
-- The [Babashka](https://github.com/babashka/babashka#installation) (`bb`) runtime.
+- The [Babashka](https://github.com/babashka/babashka#installation) (`bb`) runtime,
+  or Docker (see [Run with Docker](#run-with-docker)).
 - A Digitransit API subscription key. Register at the
   [Digitransit API portal](https://portal-api.digitransit.fi/), create a
   subscription and copy the key to `.env` (see below).
@@ -248,6 +249,28 @@ install -m 644 deploy/freebsd/trmnl_hsl.conf /usr/local/etc/newsyslog.conf.d/trm
 sysrc trmnl_hsl_enable=YES
 service trmnl_hsl start
 ```
+
+### Run with Docker
+
+A [`Dockerfile`](Dockerfile) and a [Compose file](compose.yaml) are included
+for hosts other than FreeBSD. The image is based on the official
+[`babashka/babashka`](https://hub.docker.com/r/babashka/babashka) image and
+runs the server as an unprivileged user. To build and start it:
+
+```sh
+cp .env.example .env
+$EDITOR .env # Paste in your DIGITRANSIT_KEY
+docker compose up -d --build
+```
+
+The container reads its settings from `.env`. Compose publishes the port on
+the loopback interface only, so that the reverse proxy is the only way in.
+Logs go to stdout (`docker compose logs -f`), and Docker's own `HEALTHCHECK`
+polls [`/health`](#health-checks).
+
+[`src/hsl/config.clj`](src/hsl/config.clj) is bind-mounted into the
+container, so you can edit the boards without rebuilding the image. Restart
+with `docker compose restart` to apply the changes.
 
 ### Health checks
 

@@ -1,0 +1,16 @@
+services:
+  trmnl-hsl:
+    build:
+      context: .
+      args:
+        - BB_VERSION
+    image: trmnl-hsl
+    restart: unless-stopped
+    init: true
+    env_file: .env
+    ports:
+      # Loopback only: put a reverse proxy in front for TLS and the
+      # TRMNL IP allowlist (see the README)
+      - "127.0.0.1:${PORT:-4001}:${PORT:-4001}"
+    volumes:
+      - ./src/hsl/config.clj:/app/src/hsl/config.clj:ro
