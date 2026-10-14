@@ -2,11 +2,9 @@ ARG BB_VERSION=1.12.218
 FROM babashka/babashka:${BB_VERSION}
 
 RUN groupadd \
-  --system \
   --gid 10001 \
   trmnl \
   && useradd \
-    --system \
     --uid 10001 \
     --gid trmnl \
     --no-create-home \
