@@ -300,8 +300,12 @@ Logs go to stdout (`docker compose logs -f`), and Docker's own `HEALTHCHECK`
 polls [`/health`](#health-checks).
 
 The `config/` directory is bind-mounted into the container, so you can edit the
-boards without rebuilding the image. Restart with `docker compose restart` to
-apply the changes.
+boards without rebuilding the image. To apply the changes, check them in a
+one-off container first, so a broken config leaves the running server alone:
+
+```sh
+docker compose run --rm trmnl-hsl bb check && docker compose restart
+```
 
 ### Health checks
 
