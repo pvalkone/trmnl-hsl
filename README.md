@@ -201,6 +201,11 @@ its row budget evenly across them:
   name (e.g. three "Tekniikan museo" stops on different streets) need distinct
   overrides to list separately.
 
+After editing the boards, run `bb check`. It reads `boards.edn` and reports
+syntax errors, unknown keys (e.g. a misspelt `:hidden-routes`) and filters that
+refer to stops outside their column. The server runs the same check at startup
+and refuses to start on a broken config.
+
 Finding stop IDs and route keys: the easiest way is to hit `/preview` (or
 `/api/trmnl`) with the stop in `:stop-ids` and no filters. Every departure's line,
 destination and direction are visible, so you can read off the exact route key to
@@ -268,6 +273,10 @@ install -m 644 deploy/freebsd/trmnl_hsl.conf /usr/local/etc/newsyslog.conf.d/trm
 sysrc trmnl_hsl_enable=YES
 service trmnl_hsl start
 ```
+
+`service trmnl_hsl configtest` runs `bb check` as the service user. `restart`
+runs it before stopping the server, so a broken config is reported and the
+running server is left alone.
 
 ### Run with Docker
 

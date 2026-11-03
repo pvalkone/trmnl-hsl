@@ -7,7 +7,8 @@
 # cwd, and daemon(8) has no chdir flag.
 #
 # The rc.d service (trmnl_hsl) points daemon at this script, which
-# keeps all shell quoting out of command_args.
+# keeps all shell quoting out of command_args. An optional argument
+# names a different bb task, e.g. `run.sh check`.
 #
 cd "$(dirname "$0")" || exit 1
-exec "${BB_BIN:-/usr/local/bin/bb}" serve
+exec "${BB_BIN:-/usr/local/bin/bb}" "${1:-serve}"
