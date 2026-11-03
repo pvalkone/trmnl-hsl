@@ -8,6 +8,7 @@
             [hsl.config :as config]
             [hsl.digitransit :as digitransit]
             [hsl.render :as render]
+            [hsl.validate :as validate]
             [org.httpkit.server :as http])
   (:import (java.time ZonedDateTime)
            (java.time.format DateTimeFormatter)))
@@ -189,6 +190,7 @@
    value, so re-requiring this namespace swaps in new request-handling code on
    the already-running server without a restart."
   []
+  (validate/validate! config/boards)
   (let [dotenv (load-dotenv! ".env")
         api-key (validate-api-key (env dotenv "DIGITRANSIT_KEY" nil))
         port (Long/parseLong (env dotenv "PORT" "4001"))

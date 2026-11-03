@@ -6,7 +6,16 @@
   dev   {:doc "Start the server for local dev, reloading code/templates on change"
          :requires ([hsl.dev :as dev])
          :task (dev/-main)}
+  check {:doc "Check the board config, e.g. before a restart"
+         :requires ([hsl.config :as config] [hsl.validate :as validate])
+         :task (if-let [ps (seq (validate/problems config/boards))]
+                 (do (binding [*out* *err*]
+                       (println (str "Invalid board config (" (config/boards-path) "):"))
+                       (doseq [p ps] (println " " p)))
+                     (System/exit 1))
+                 (println (str "Board config OK (" (config/boards-path) "):")
+                          (clojure.string/join ", " (keys config/boards))))}
   test  {:doc "Run the unit tests"
-         :requires ([clojure.test :as t] [hsl.board-test] [hsl.digitransit-test] [hsl.render-test] [hsl.server-test] [hsl.snapshot-test])
-         :task (let [{:keys [fail error]} (t/run-tests 'hsl.board-test 'hsl.digitransit-test 'hsl.render-test 'hsl.server-test 'hsl.snapshot-test)]
+         :requires ([clojure.test :as t] [hsl.board-test] [hsl.digitransit-test] [hsl.render-test] [hsl.server-test] [hsl.snapshot-test] [hsl.validate-test])
+         :task (let [{:keys [fail error]} (t/run-tests 'hsl.board-test 'hsl.digitransit-test 'hsl.render-test 'hsl.server-test 'hsl.snapshot-test 'hsl.validate-test)]
                  (System/exit (if (pos? (+ fail error)) 1 0)))}}}

@@ -27,9 +27,17 @@ command="/usr/sbin/daemon"
 command_args="-f -r -P ${pidfile} -t ${name} -H -o ${logfile} /usr/bin/env ${trmnl_hsl_env} ${trmnl_hsl_appdir}/run.sh"
 procname="/usr/sbin/daemon"
 
+extra_commands="configtest"
+configtest_cmd="trmnl_hsl_configtest"
 start_precmd="trmnl_hsl_precmd"
+restart_precmd="trmnl_hsl_configtest"
+
+trmnl_hsl_configtest() {
+  su -m "${trmnl_hsl_user}" -c "/usr/bin/env ${trmnl_hsl_env} ${trmnl_hsl_appdir}/run.sh check"
+}
 
 trmnl_hsl_precmd() {
+  trmnl_hsl_configtest || return 1
   # Pre-create PID/log owned by the run user (their dirs are root-only).
   install -o "${trmnl_hsl_user}" -g "${trmnl_hsl_user}" -m 644 /dev/null "${pidfile}"
   # Create the log only when missing so restarts append to it rather than truncating.
