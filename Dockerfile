@@ -12,7 +12,7 @@ RUN groupadd \
     trmnl
 
 WORKDIR /app
-COPY bb.edn ./
+COPY bb.edn boards.example.edn ./
 COPY src/ src/
 COPY views/ views/
 COPY resources/ resources/
