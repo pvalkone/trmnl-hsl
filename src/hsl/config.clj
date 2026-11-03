@@ -1,12 +1,12 @@
 (ns hsl.config
   "Board config: `boards` maps a URL slug to a board definition, read from
-   boards.edn in the working directory, or from the committed
-   boards.example.edn when there is none. See boards.example.edn for the format."
+   config/boards.edn, or from the committed config/boards.example.edn when
+   there is none. See config/boards.example.edn for the format."
   (:require [babashka.fs :as fs]
             [clojure.edn :as edn]))
 
-(def boards-file "boards.edn")
-(def example-file "boards.example.edn")
+(def boards-file "config/boards.edn")
+(def example-file "config/boards.example.edn")
 
 (defn read-boards
   "Read the boards map from the EDN file at `path`, naming the file in any

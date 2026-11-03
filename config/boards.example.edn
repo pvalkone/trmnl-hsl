@@ -1,6 +1,6 @@
 ;; Example board config.
 ;;
-;; Copy this to boards.edn and edit it. Run `bb check` after editing.
+;; Copy this to config/boards.edn and edit it. Run `bb check` after editing.
 ;;
 ;; Maps a URL slug to a board definition. Each slug is served at
 ;; /api/trmnl/<slug> and /preview/<slug>.
