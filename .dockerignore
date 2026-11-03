@@ -1,6 +1,6 @@
 *
 !bb.edn
-!boards.example.edn
+!config/boards.example.edn
 !src/
 !views/
 !resources/

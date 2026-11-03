@@ -60,7 +60,7 @@ $EDITOR .env # Paste in your DIGITRANSIT_KEY
 bb serve     # Starts the server on http://localhost:4001
 ```
 
-This serves the example board from `boards.example.edn`; see
+This serves the example board from `config/boards.example.edn`; see
 [Boards](#boards-which-stops-which-routes) to configure your own.
 
 Then:
@@ -156,16 +156,17 @@ Variables are read from the real environment first, then an `.env` file (see
 
 ### Boards: which stops, which routes
 
-Everything about what the boards show lives in `boards.edn`, which is
+Everything about what the boards show lives in `config/boards.edn`, which is
 gitignored so your stops stay out of the repo. Start from the example:
 
 ```sh
-cp boards.example.edn boards.edn
+cp config/boards.example.edn config/boards.edn
 ```
 
-Without a `boards.edn`, the server falls back to
-[`boards.example.edn`](boards.example.edn). The file maps a URL slug to a board
-definition; each slug is served at `/api/trmnl/<slug>` and `/preview/<slug>`.
+Without a `config/boards.edn`, the server falls back to
+[`config/boards.example.edn`](config/boards.example.edn). The file maps a URL
+slug to a board definition; each slug is served at `/api/trmnl/<slug>` and
+`/preview/<slug>`.
 Add a board by adding a key; there is no per-board setup beyond this map.
 
 Each board has a two-column layout; each column lists a set of stops and splits
@@ -201,10 +202,10 @@ its row budget evenly across them:
   name (e.g. three "Tekniikan museo" stops on different streets) need distinct
   overrides to list separately.
 
-After editing the boards, run `bb check`. It reads `boards.edn` and reports
-syntax errors, unknown keys (e.g. a misspelt `:hidden-routes`) and filters that
-refer to stops outside their column. The server runs the same check at startup
-and refuses to start on a broken config.
+After editing the boards, run `bb check`. It reads `config/boards.edn` and
+reports syntax errors, unknown keys (e.g. a misspelt `:hidden-routes`) and
+filters that refer to stops outside their column. The server runs the same check
+at startup and refuses to start on a broken config.
 
 Finding stop IDs and route keys: the easiest way is to hit `/preview` (or
 `/api/trmnl`) with the stop in `:stop-ids` and no filters. Every departure's line,
@@ -288,8 +289,8 @@ runs the server as an unprivileged user. To build and start it:
 ```sh
 cp .env.example .env
 $EDITOR .env # Paste in your DIGITRANSIT_KEY
-cp boards.example.edn boards.edn
-$EDITOR boards.edn
+cp config/boards.example.edn config/boards.edn
+$EDITOR config/boards.edn
 docker compose up -d --build
 ```
 
@@ -298,10 +299,9 @@ the loopback interface only, so that the reverse proxy is the only way in.
 Logs go to stdout (`docker compose logs -f`), and Docker's own `HEALTHCHECK`
 polls [`/health`](#health-checks).
 
-`boards.edn` is bind-mounted into the container, so you can edit the boards
-without rebuilding the image. It must exist before `docker compose up`;
-otherwise Docker creates an empty directory in its place. Restart
-with `docker compose restart` to apply the changes.
+The `config/` directory is bind-mounted into the container, so you can edit the
+boards without rebuilding the image. Restart with `docker compose restart` to
+apply the changes.
 
 ### Health checks
 
