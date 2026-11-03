@@ -60,6 +60,9 @@ $EDITOR .env # Paste in your DIGITRANSIT_KEY
 bb serve     # Starts the server on http://localhost:4001
 ```
 
+This serves the example board from `boards.example.edn`; see
+[Boards](#boards-which-stops-which-routes) to configure your own.
+
 Then:
 
 ```sh
@@ -153,10 +156,16 @@ Variables are read from the real environment first, then an `.env` file (see
 
 ### Boards: which stops, which routes
 
-Everything about what the boards show lives in
-[`src/hsl/config.clj`](src/hsl/config.clj). `boards` maps a URL slug to a board
-definition; each slug is served at `/api/trmnl/<slug>` and `/preview/<slug>`
-.
+Everything about what the boards show lives in `boards.edn`, which is
+gitignored so your stops stay out of the repo. Start from the example:
+
+```sh
+cp boards.example.edn boards.edn
+```
+
+Without a `boards.edn`, the server falls back to
+[`boards.example.edn`](boards.example.edn). The file maps a URL slug to a board
+definition; each slug is served at `/api/trmnl/<slug>` and `/preview/<slug>`.
 Add a board by adding a key; there is no per-board setup beyond this map.
 
 Each board has a two-column layout; each column lists a set of stops and splits
@@ -270,6 +279,8 @@ runs the server as an unprivileged user. To build and start it:
 ```sh
 cp .env.example .env
 $EDITOR .env # Paste in your DIGITRANSIT_KEY
+cp boards.example.edn boards.edn
+$EDITOR boards.edn
 docker compose up -d --build
 ```
 
@@ -278,8 +289,9 @@ the loopback interface only, so that the reverse proxy is the only way in.
 Logs go to stdout (`docker compose logs -f`), and Docker's own `HEALTHCHECK`
 polls [`/health`](#health-checks).
 
-[`src/hsl/config.clj`](src/hsl/config.clj) is bind-mounted into the
-container, so you can edit the boards without rebuilding the image. Restart
+`boards.edn` is bind-mounted into the container, so you can edit the boards
+without rebuilding the image. It must exist before `docker compose up`;
+otherwise Docker creates an empty directory in its place. Restart
 with `docker compose restart` to apply the changes.
 
 ### Health checks

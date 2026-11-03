@@ -1,7 +1,6 @@
 (ns hsl.board-test
   (:require [clojure.test :refer [deftest testing is]]
-            [hsl.board :as board]
-            [hsl.config :as config]))
+            [hsl.board :as board]))
 
 (def service 1751760000) ; some service-day midnight
 (defn- at [dep] (+ service dep))
@@ -74,8 +73,24 @@
      [(pattern "HSL:1078" "78" "Latokartano" 0
                [(stoptime "HSL:1240103" 50600)])]}]}) ; allowlisted
 
+(def board-config
+  {:title "Kotisaarenkatu"
+   :number-of-departures 20
+   :columns
+   {:left
+    {:rows 12
+     :stop-ids ["HSL:1230410" "HSL:1210405" "HSL:1210406"]
+     :hidden-routes {}}
+    :right
+    {:rows 9
+     :stop-ids ["HSL:1240118" "HSL:1230112" "HSL:1230109" "HSL:1240103"]
+     :hidden-routes {"HSL:1240118" ["HSL:4717:717:Rautatientori:1"]}
+     :show-routes
+     {"HSL:1230109" ["HSL:1071:71:Malmi:0" "HSL:1506:506:Myllypuro (M):1"]
+      "HSL:1240103" ["HSL:1078:78:Latokartano:0"]}}}})
+
 (def now (at 50700)) ; 17:05
-(def result (board/build-board data (config/boards "kotisaarenkatu") now))
+(def result (board/build-board data board-config now))
 
 (defn- stop-by-name [column nm]
   (first (filter #(= (:name %) nm) (:stops column))))

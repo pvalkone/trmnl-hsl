@@ -13,4 +13,4 @@ services:
       # TRMNL IP allowlist (see the README)
       - "127.0.0.1:${PORT:-4001}:${PORT:-4001}"
     volumes:
-      - ./src/hsl/config.clj:/app/src/hsl/config.clj:ro
+      - ./boards.edn:/app/boards.edn:ro
